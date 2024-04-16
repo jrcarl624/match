@@ -40,8 +40,7 @@ namespace Match::Parser
 				}
 			}
 
-			// operators
-			
+				// operators
 
 			case (u8)Delimiters::OpenBrace:
 			case (u8)Delimiters::CloseBrace:
@@ -50,8 +49,6 @@ namespace Match::Parser
 			case (u8)Delimiters::OpenSquareBracket:
 			case (u8)Delimiters::CloseSquareBracket:
 			{
-			
-
 			}
 			}
 		}
