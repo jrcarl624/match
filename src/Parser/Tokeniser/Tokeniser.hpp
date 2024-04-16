@@ -16,16 +16,11 @@ namespace Match::Parser
 	public:
 		void Tokenise(const SlideViewChar source);
 
-
-
 		/*
 
 	uppercase: b'A'..=b'Z',
 	lowercase: b'a'..=b'z',
 	numeric: b'0'..=b'9',*/
-
-	
-
 
 	private:
 		enum class Delimiters : u8
@@ -41,7 +36,7 @@ namespace Match::Parser
 		const u8 listSeparator = ',';
 		const u8 scopeSeparator = ';';
 		const u8 typeSeparator = ':';
-
+		const u8 newLine = '\n';
 
 		enum class OtherWhitespace : u8
 		{
@@ -116,24 +111,30 @@ namespace Match::Parser
 			GreaterThanOrEqual = '>=',
 		};
 
-		/*Pattern,
-		Template,
-		Abstract,
-		Statement,
-		Group,
-		Namespace,
-		Rule,
-		For,
-		While,
-		Loop,
-		If,
-		Else,
-		ElseIf,
-		Switch,
-		Case,
-		Default,*/
+		enum class Keywords : u8
+		{
+			Template,
+			Abstract,
+			Statement,
+			Group,
+			Namespace,
+			Rule,
+			For,
+			While,
+			Loop,
+			If,
+			Else,
+			ElseIf,
+			Switch,
+			Case,
+			Default,
+		};
 
-		enum Brackets : u8
+		struct Template
+		{
+		};
+
+		enum class Delimiter : u8
 		{
 			OpenBrace = '{',
 			CloseBrace = '}',
@@ -143,11 +144,19 @@ namespace Match::Parser
 			CloseSquareBracket = ']',
 		};
 
-		enum class Punctuation: u8 {
+		enum class Punctuation : u8
+		{
 			Colon = ':',
 			Semicolon = ';',
 			Comma = ',',
 		};
+
+		inline void IncrementRow()
+		{
+			this->lastRowIndex = this->m_subTokens.indexOf(this->m_window.getHeadPtr()) - this->m_window.Size();
+			this->row++;
+		}
+
 	private:
 		SlideViewChar m_subTokens = {};
 		SlideViewChar m_window = {};

@@ -6,114 +6,127 @@
 
 namespace Match
 {
-    template<typename T>
+    template <typename T>
     class SlideViewGeneric
     {
     public:
-        SlideViewGeneric(T* start, T* end)
-            : m_start(start), m_end(end)
+        SlideViewGeneric(T *start, T *end)
+            : m_head(start), m_tail(end)
         {
         }
+
         SlideViewGeneric(std::string_view view)
-            : m_start((T*)view.data()), m_end((T*)view.data() + view.size())
+            : m_head((T *)view.data()), m_tail((T *)view.data() + view.size())
         {
         }
 
         SlideViewGeneric() {}
 
-        inline void IncHead(uSize offset = 1){ m_start += offset;}
-        inline void IncTail(uSize offset = 1){ m_end += offset;}
+        inline void IncHead(uSize offset = 1) { this->m_head += offset; }
+        inline void IncTail(uSize offset = 1) { this->m_tail += offset; }
 
-        inline void DecHead(uSize offset = 1){ m_start -= offset;}
-        inline void DecTail(uSize offset = 1){ m_end -= offset;}
+        inline void DecHead(uSize offset = 1) { this->m_head -= offset; }
+        inline void DecTail(uSize offset = 1) { this->m_tail -= offset; }
 
-        template<std::integral U = u8>
-        inline const U& Peak(i64 offset = 0) const
+        template <std::integral U = T>
+        inline U Peak(i64 offset = 0) const
         {
-            return *reinterpret_cast<U*>(m_start + offset);
+            return *reinterpret_cast<U *>(m_head + offset);
+        }
+
+        template <std::integral U = T>
+        inline const U &PeakRef(i64 offset = 0) const
+        {
+            return *reinterpret_cast<U *>(m_head + offset);
         }
 
         inline bool IsEmpty() const
         {
-            return m_start == m_end;
+            return this->m_head == this->m_tail;
         }
 
         inline SlideViewGeneric<T> SubView(i64 start, i64 end)
         {
-            return SlideViewGeneric<T>(m_start + start, m_start + end);
+            return SlideViewGeneric<T>(this->m_head + start, this->m_head + end);
         }
 
-        inline uSize Size() const {return m_end - m_start;}
-        
-        inline bool IsWindowInBounds(uSize n, const SlideViewGeneric<T>& other) const
+        inline uSize Size() const { return this->m_tail - this->m_head; }
+
+        inline bool IsWindowInBounds(uSize n, const SlideViewGeneric<T> &other) const
         {
-            return m_end + n <= other.m_end;
+            return this->m_tail + n <= other.m_tail;
         }
 
-        template<typename U = T>
+        template <typename U = T>
         inline SlideViewGeneric<U> Window(uSize n)
         {
-            return SlideViewGeneric<U>(m_start, m_start + n);
+            return SlideViewGeneric<U>(this->m_head, this->m_head + n);
         }
 
         std::basic_string_view<T> ToString() const
         {
-            return std::basic_string_view<T>(m_start, m_end - m_start);
+            return std::basic_string_view<T>(this->m_head, this->m_tail - this->m_head);
         }
 
-        inline std::basic_string_view<T> operator()() 
+        inline std::basic_string_view<T> operator()()
         {
-            return std::basic_string_view<T>(m_start, m_end - m_start);
+            return std::basic_string_view<T>(this->m_head, this->m_tail - this->m_head);
         }
 
+        inline T &operator*() { return *m_head; }
 
+        inline char operator[](uSize index) { return m_head[index]; }
 
-        inline SlideViewGeneric<T>& operator++()
+        inline bool operator==(const SlideViewGeneric<T> &other) const
         {
-            m_start++;
-            m_end++;
-            return *this;
+            return this->m_head == other.m_head && this->m_tail == other.m_tail;
         }
 
-        inline SlideViewGeneric<T>& operator--()
+        inline bool operator!=(const SlideViewGeneric<T> &other) const
         {
-            m_start--;
-            m_end--;
-            return *this;
+            return m_head != other.m_head || m_tail != other.m_tail;
         }
 
-        inline SlideViewGeneric<T>& operator+=(uSize offset)
+                inline void reset()
         {
-            m_start += offset;
-            m_end += offset;
-            return *this;
+            this->m_head = this->m_tail
         }
 
-        inline SlideViewGeneric<T>& operator-=(uSize offset)
+        inline void Skip(uSize n = 1)
         {
-            m_start -= offset;
-            m_end -= offset;
-            return *this;
+
+            this->IncHead(n);
+            this->reset();
         }
-
-        inline T& operator*(){return *m_start;}
-
-        inline char operator [](uSize index){return m_start[index];}
-
-        inline bool operator ==(const SlideViewGeneric<T>& other) const
+        /// Gets the index of the pointer in the view
+        inline u16 indexOf(const T *ptr) const
         {
-            return m_start == other.m_start && m_end == other.m_end;
+            return ptr - this->m_head;
         }
 
-        inline bool operator !=(const SlideViewGeneric<T>& other) const
+        inline T getHead() const
         {
-            return m_start != other.m_start || m_end != other.m_end;
+            return *this->m_head;
         }
-        
+
+        inline T getTail() const
+        {
+            return *this->m_tail;
+        }
+
+        inline const T *getHeadPtr() const
+        {
+            return this->m_head;
+        }
+
+        inline const T *getTailPtr() const
+        {
+            return this->m_tail;
+        }
 
     private:
-        T* m_start = nullptr;
-        T* m_end = nullptr;
+        T *m_head = nullptr;
+        T *m_tail = nullptr;
     };
 
     using SlideViewChar = SlideViewGeneric<char>;
