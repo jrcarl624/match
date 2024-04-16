@@ -64,7 +64,7 @@
         
     let customArray:array<u32, 10> = [1,2,3,4,5,6,7,8,9,10];
     let customInclusiveSlice:slice<u32> = customArray[1, 5];
-    let customSlice:slice<u32> = customArray[1..5];
+    let customSlice:slice<u32> = customArray[1, 5];
 
     let customVector:array<u64, 100> = [1,2,3,4,5,6,7,8,9,10];
 
@@ -108,18 +108,7 @@
     <= // less than or equal
     >= // greater than or equal
     = // assign
-    += // add assign
-    -= // subtract assign
-    *= // multiply assign
-    /= // divide assign
-    %= // modulo assign
-    <<= // shift left assign
-    >>= // shift right assign
-    &= // bitwise and assign
-    |= // bitwise or assign
     . // access
-    .. // range
-    ..= // inclusive range
     : // type
     :: // namespace
     ? // optional
