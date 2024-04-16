@@ -1,8 +1,8 @@
 #include "Parser.hpp"
 
-namespace Match
+namespace Match::Parser
 {
-	Parser::Parser(std::string_view code)
+	Parser::Parser()
 	{
 
 	}

@@ -2,12 +2,12 @@
 #include "Tokeniser.hpp"
 #include <string>
 
-namespace Match
+namespace Match::Parser
 {
 	class Parser
 	{
 	public:
-		Parser(std::string_view code);
+		Parser();
 		~Parser();
 	private:
 		Tokeniser tokeniser;

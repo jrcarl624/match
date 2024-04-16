@@ -11,6 +11,8 @@ namespace Match
         ~Application();
     private:
         void run();
+    private:
+        Parser::Parser parser;
 
     };
 
