@@ -21,6 +21,7 @@ namespace Match
 		Switch,
 		Case,
 		Default,
+
 		// Primitives
 		Char,
 		U32,
@@ -30,8 +31,9 @@ namespace Match
 		U64,
 		I64,
 		Bool,
+		
 		// Operators
-		BitwiseOr,
+		BitwiseOr ='|',
 		Or,
 		BitwiseAnd,
 		And,
@@ -51,19 +53,11 @@ namespace Match
 		LessThanOrEqual,
 		GreaterThanOrEqual,
 		Assign,
-		AddAssign,
-		SubtractAssign,
-		MultiplyAssign,
-		DivideAssign,
-		ModuloAssign,
-		ShiftLeftAssign,
-		ShiftRightAssign,
-		BitwiseAndAssign,
-		BitwiseOrAssign,
 		Access,
 		Type,
 		Optional,
 		Return,
+		
 		// Brackets
 		OpenCurlyBracket,
 		CloseCurlyBracket,
@@ -71,10 +65,12 @@ namespace Match
 		CloseSquareBracket,
 		OpenRoundBracket,
 		CloseRoundBracket,
+
 		// Punctuation
 		Comma,
 		Colon,
 		SemiColon,
+
 		// Literals
 		CharLiteral,
 		U32Literal,
@@ -84,8 +80,10 @@ namespace Match
 		U64Literal,
 		I64Literal,
 		BoolLiteral,
+
 		// Identifiers
 		Identifier,
+
 		// End of file
 		Eof
 	};

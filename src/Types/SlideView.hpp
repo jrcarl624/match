@@ -61,11 +61,7 @@ namespace Match
             return std::basic_string_view<T>(m_start, m_end - m_start);
         }
 
-        inline std::basic_string_view<T> operator()() const
-        {
-            return std::basic_string_view<T>(m_start, m_end - m_start);
-        }
-        inline std::basic_string_view<T> operator std::basic_string_view<T>() const
+        inline std::basic_string_view<T> operator()() 
         {
             return std::basic_string_view<T>(m_start, m_end - m_start);
         }

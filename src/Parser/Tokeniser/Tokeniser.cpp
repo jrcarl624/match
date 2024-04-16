@@ -1,6 +1,7 @@
 #include "Tokeniser.hpp"
 #include <cstdint>
 
+#define fun() {}
 namespace Match::Parser
 {
 	Tokeniser::Tokeniser()
@@ -10,8 +11,15 @@ namespace Match::Parser
 	{
 	}
 
+	enum class Operator: u16 {
+		// Arithmetic
+		
+	};
+
+
 	void Tokeniser::Tokenise(const SlideViewChar source)
 	{
 
 	}
 }
+

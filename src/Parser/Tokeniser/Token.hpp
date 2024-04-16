@@ -11,7 +11,7 @@ namespace Match::Parser
         ~Token() {}
 
         SlideViewChar GetSubTokens() const { return m_subTokens; }
-        std::string_view GetSubTokensAsStr() const { return m_subTokens; }
+        std::string_view GetSubTokensAsStr() { return m_subTokens.ToString(); }
         uSize GetColumn() const { return m_column; }
         uSize GetRow() const { return m_row; }
         uSize Length() const { return m_subTokens.Size(); }
