@@ -12,13 +12,13 @@ namespace Match::Parser
 		Tokeniser();
 		~Tokeniser();
 	public:
-		void Tokenise(const std::string_view source);
+		void Tokenise(const SlideViewChar source);
 	private:
 
 	private:
-		std::string_view m_subTokens = {};
-		std::string_view m_source = {};
-        std::string_view m_sourceView = {};
+		SlideViewChar m_subTokens = {};
+		SlideViewChar m_source = {};
+        SlideViewChar m_sourceView = {};
 		uSize row = 0;
 		uSize lastRowIndex = 0; 
 	};
