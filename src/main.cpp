@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Application.hpp"
-#include "Parser/SlideView.hpp"
 
 int main()
 {

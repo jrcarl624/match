@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include "TokenTypes.hpp"
-#include "../types.hpp"
-#include "SlideView.hpp"
+#include "../../types.hpp"
+#include "../../Types/SlideView.hpp"
 
 namespace Match::Parser
 {

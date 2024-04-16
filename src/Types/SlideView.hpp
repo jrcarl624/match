@@ -43,7 +43,35 @@ namespace Match
             return SlideViewGeneric<T>(m_start + start, m_start + end);
         }
 
-        inline uSize Size(){return m_end - m_start;}
+        inline uSize Size() const {return m_end - m_start;}
+        
+        inline bool IsWindowInBounds(uSize n, const SlideViewGeneric<T>& other) const
+        {
+            return m_end + n <= other.m_end;
+        }
+
+        template<typename U = T>
+        inline SlideViewGeneric<U> Window(uSize n)
+        {
+            return SlideViewGeneric<U>(m_start, m_start + n);
+        }
+
+        std::basic_string_view<T> ToString() const
+        {
+            return std::basic_string_view<T>(m_start, m_end - m_start);
+        }
+
+        inline std::basic_string_view<T> operator()() const
+        {
+            return std::basic_string_view<T>(m_start, m_end - m_start);
+        }
+        inline std::basic_string_view<T> operator std::basic_string_view<T>() const
+        {
+            return std::basic_string_view<T>(m_start, m_end - m_start);
+        }
+
+
+
         inline SlideViewGeneric<T>& operator++()
         {
             m_start++;
@@ -85,13 +113,14 @@ namespace Match
         {
             return m_start != other.m_start || m_end != other.m_end;
         }
+        
 
     private:
         T* m_start = nullptr;
         T* m_end = nullptr;
     };
 
-    using SlideViewChar = SlideViewGeneric<u8>;
+    using SlideViewChar = SlideViewGeneric<char>;
     using SlideViewWChar = SlideViewGeneric<wchar_t>;
     using SlideViewChar32 = SlideViewGeneric<char32_t>;
 }
