@@ -45,6 +45,11 @@ namespace Match
             return this->m_head == this->m_tail;
         }
 
+        inline bool IsPopulated() const
+        {
+            return this->m_head != this->m_tail;
+        }
+
         inline SlideViewGeneric<T> SubView(i64 start, i64 end)
         {
             return SlideViewGeneric<T>(this->m_head + start, this->m_head + end);
@@ -87,7 +92,7 @@ namespace Match
             return m_head != other.m_head || m_tail != other.m_tail;
         }
 
-                inline void reset()
+        inline void reset()
         {
             this->m_head = this->m_tail
         }
@@ -99,27 +104,27 @@ namespace Match
             this->reset();
         }
         /// Gets the index of the pointer in the view
-        inline u16 indexOf(const T *ptr) const
+        inline u16 IndexOf(const T *ptr) const
         {
             return ptr - this->m_head;
         }
 
-        inline T getHead() const
+        inline T GetHead() const
         {
             return *this->m_head;
         }
 
-        inline T getTail() const
+        inline T GetTail() const
         {
             return *this->m_tail;
         }
 
-        inline const T *getHeadPtr() const
+        inline const T *GetHeadPtr() const
         {
             return this->m_head;
         }
 
-        inline const T *getTailPtr() const
+        inline const T *GetTailPtr() const
         {
             return this->m_tail;
         }

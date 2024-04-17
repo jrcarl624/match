@@ -6,7 +6,7 @@ namespace Match::Parser
     class Token
     {
     public:
-        Token(SlideViewChar subTokens, uSize column, uSize row) : m_subTokens(subTokens), m_column(column), m_row(row) {}
+        Token(SlideViewChar subTokens, uSize column, uSize row, TokenType type) : m_subTokens(subTokens), m_column(column), m_row(row), m_type(type) {}
         Token() {}
         ~Token() {}
 
@@ -23,5 +23,19 @@ namespace Match::Parser
         SlideViewChar m_subTokens = {};
         uSize m_column = 0;
         uSize m_row = 0;
+        TokenType m_type = TokenType::Unknown;
     };
+
+    enum TokenType
+    {
+        Whitespace,
+        Comment,
+        Identifier,
+        Keyword,
+        Operator,
+        Literal,
+        Unknown,
+        CharLiteral,
+        StringLiteral,
+    }
 }

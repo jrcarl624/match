@@ -10,7 +10,7 @@ namespace Match::Parser
 		Parser();
 		~Parser();
 	private:
-		Tokeniser tokeniser;
+		Tokenizer tokeniser;
 	};
 }
 
