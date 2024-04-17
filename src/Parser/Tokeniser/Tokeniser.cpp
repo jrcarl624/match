@@ -39,27 +39,7 @@ namespace Match::Parser
 			goto next_sub_token;
 		};
 
-		case (u8)Operator1::Not:
-		case (u8)Operator1::BitwiseOr:
-		case (u8)Operator1::BitwiseAnd:
-		case (u8)Operator1::BitwiseXor:
-		case (u8)Operator1::Add:
-		case (u8)Operator1::Subtract:
-		case (u8)Operator1::Multiply:
-		case (u8)Operator1::Divide:
-		case (u8)Operator1::Modulo:
-		case (u8)Operator1::Equal:
-		case (u8)Operator1::NotEqual:
-		case (u8)Operator1::LessThan:
-		case (u8)Operator1::GreaterThan:
-		case (u8)Operator1::Assign:
-		case (u8)Operator1::Access:
-		case (u8)Operator1::Type:
-		case (u8)Operator1::Optional:
-		{
-			this->SetTokenType(TokenType::Operator);
-			goto increment;
-		}
+		
 
 		// 2 char operators
 		case getFirstByte((u16)Operator2::Or):
@@ -108,11 +88,28 @@ namespace Match::Parser
 			};
 			}
 		}
-		case (u8)Operator::Add:
+		case (u8)Operator1::Not:
+		case (u8)Operator1::BitwiseOr:
+		case (u8)Operator1::BitwiseAnd:
+		case (u8)Operator1::BitwiseXor:
+		case (u8)Operator1::Add:
+		case (u8)Operator1::Subtract:
+		case (u8)Operator1::Multiply:
+		case (u8)Operator1::Divide:
+		case (u8)Operator1::Modulo:
+		case (u8)Operator1::Equal:
+		case (u8)Operator1::NotEqual:
+		case (u8)Operator1::LessThan:
+		case (u8)Operator1::GreaterThan:
+		case (u8)Operator1::Assign:
+		case (u8)Operator1::Access:
+		case (u8)Operator1::Type:
+		case (u8)Operator1::Optional:
 		{
 			this->SetTokenType(TokenType::Operator);
 			goto increment;
 		}
+		
 		case (u8)Delimiter::OpenBrace:
 		case (u8)Delimiter::CloseBrace:
 		case (u8)Delimiter::OpenParenthesis:
