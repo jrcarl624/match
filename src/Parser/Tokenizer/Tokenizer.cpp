@@ -47,9 +47,9 @@ namespace Match::Parser
 		constexpr u8 GreaterThanOrEqual = getFirstByte((u16)Operator2::GreaterThanOrEqual);
 
 	next_sub_token:
-
+		peek = this->m_window.Back<u8>();
 		// Back the tail of the window
-		switch (peek = this->m_window.Back<u8>())
+		switch (peek)
 		{
 		case (u8)Whitespace::CarriageReturn:
 		case (u8)Whitespace::FormFeed:
@@ -65,6 +65,7 @@ namespace Match::Parser
 			goto next_sub_token;
 		};
 		}
+		
 		switch (peek)
 		{
 
@@ -142,6 +143,7 @@ namespace Match::Parser
 			goto increment;
 		}
 		}
+
 		// Delimiters -----------------------
 		switch (peek)
 		{
@@ -152,35 +154,19 @@ namespace Match::Parser
 		case (u8)Delimiter::CloseParenthesis:
 		case (u8)Delimiter::OpenSquareBracket:
 		case (u8)Delimiter::CloseSquareBracket:
-		{
-			this->SetTokenType(TokenType::Delimiter);
-			goto handle_separator;
-		}
 		case listSeparator:
-		{
-			this->SetTokenType(TokenType::ListSeparator);
-			goto handle_separator;
-		}
 		case scopeResolution:
-		{
-			this->SetTokenType(TokenType::ScopeResolution);
-			goto handle_separator;
-		}
 		case typeSeparator:
-		{
-			this->SetTokenType(TokenType::TypeSeparator);
-			goto handle_separator;
-		}
 		case INSTANCE_ACCESS:
 		{
-			this->SetTokenType(TokenType::InstanceAccess);
-		handle_separator:
+			this->SetTokenType(TokenType::Delimiter);
 			// breaks nested switch in loop
-			if (this->m_window.IsEmpty())
+			if (this->m_window.IsPopulated())
 				this->m_window.IncTail();
 			goto increment;
 		};
 		}
+
 		// Quotes -----------------------
 		quote = peek;
 		switch (quote)
@@ -222,6 +208,7 @@ namespace Match::Parser
 				}
 			}
 			};
+			
 
 			if (this->m_window.IsPopulated())
 				goto parse_quote;
