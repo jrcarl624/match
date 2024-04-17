@@ -94,7 +94,7 @@ namespace Match
 
         inline void reset()
         {
-            this->m_head = this->m_tail
+            this->m_head = this->m_tail;
         }
 
         inline void Skip(uSize n = 1)

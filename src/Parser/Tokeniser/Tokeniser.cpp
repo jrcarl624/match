@@ -16,6 +16,7 @@ namespace Match::Parser
 	void Tokenizer::Tokenize(const SlideViewChar source)
 	{
 		u8 peek;
+		u8 quote;
 
 		if (source.IsEmpty())
 			return;
@@ -148,7 +149,7 @@ namespace Match::Parser
 		case Quote::Single:
 		case Quote::Double:
 		{
-			u8 quote = peek;
+			quote = peek;
 
 			switch (quote)
 			{
@@ -196,25 +197,51 @@ namespace Match::Parser
 		}
 		default:
 		{
+			constexpr u8 Or = getFirstByte((u16)Operator2::Or);
+			constexpr u8 And = getFirstByte((u16)Operator2::And);
+			constexpr u8 ShiftLeft = getFirstByte((u16)Operator2::ShiftLeft);
+			constexpr u8 ShiftRight = getFirstByte((u16)Operator2::ShiftRight);
+			constexpr u8 AddAssign = getFirstByte((u16)Operator2::AddAssign);
+			constexpr u8 SubtractAssign = getFirstByte((u16)Operator2::SubtractAssign);
+			constexpr u8 MultiplyAssign = getFirstByte((u16)Operator2::MultiplyAssign);
+			constexpr u8 DivideAssign = getFirstByte((u16)Operator2::DivideAssign);
+			constexpr u8 ModuloAssign = getFirstByte((u16)Operator2::ModuloAssign);
+			constexpr u8 BitwiseAndAssign = getFirstByte((u16)Operator2::BitwiseAndAssign);
+			constexpr u8 BitwiseOrAssign = getFirstByte((u16)Operator2::BitwiseOrAssign);
+			constexpr u8 BitwiseXorAssign = getFirstByte((u16)Operator2::BitwiseXorAssign);
+			constexpr u8 Return = getFirstByte((u16)Operator2::Return);
+			constexpr u8 Equal = getFirstByte((u16)Operator2::Equal);
+			constexpr u8 NotEqual = getFirstByte((u16)Operator2::NotEqual);
+			constexpr u8 LessThanOrEqual = getFirstByte((u16)Operator2::LessThanOrEqual);
+			constexpr u8 GreaterThanOrEqual = getFirstByte((u16)Operator2::GreaterThanOrEqual);
+
+
 			switch (this->m_window.Peak<u8>(1))
 			{
-			case getFirstByte((u16)Operator2::Or):
-			case getFirstByte((u16)Operator2::And):
-			case getFirstByte((u16)Operator2::ShiftLeft):
-			case getFirstByte((u16)Operator2::ShiftRight):
-			case getFirstByte((u16)Operator2::AddAssign):
-			case getFirstByte((u16)Operator2::SubtractAssign):
-			case getFirstByte((u16)Operator2::MultiplyAssign):
-			case getFirstByte((u16)Operator2::DivideAssign):
-			case getFirstByte((u16)Operator2::ModuloAssign):
-			case getFirstByte((u16)Operator2::BitwiseAndAssign):
-			case getFirstByte((u16)Operator2::BitwiseOrAssign):
-			case getFirstByte((u16)Operator2::BitwiseXorAssign):
-			case getFirstByte((u16)Operator2::Return):
-			case getFirstByte((u16)Operator2::Equal):
-			case getFirstByte((u16)Operator2::NotEqual):
-			case getFirstByte((u16)Operator2::LessThanOrEqual):
-			case getFirstByte((u16)Operator2::GreaterThanOrEqual):
+			case Or:
+			case And:
+			case ShiftLeft:
+			case ShiftRight:
+			case AddAssign:
+			case SubtractAssign:
+			case MultiplyAssign:
+			case DivideAssign:
+			case ModuloAssign:
+			case BitwiseXorAssign:
+			// case BitwiseAndAssign:
+			// case BitwiseOrAssign:
+			// case Return:
+			// case LessThanOrEqual:
+			// case GreaterThanOrEqual:
+			case Equal:
+			case NotEqual:
+
+
+
+
+							
+
+
 			case (u8)Operator1::Not:
 			case (u8)Operator1::BitwiseOr:
 			case (u8)Operator1::BitwiseAnd:
@@ -228,12 +255,12 @@ namespace Match::Parser
 			case (u8)Operator1::NotEqual:
 			case (u8)Operator1::LessThan:
 			case (u8)Operator1::GreaterThan:
-			case (u8)Operator1::Assign:
+			// case (u8)Operator1::Assign:
 			case (u8)Operator1::Access:
 			case (u8)Operator1::Type:
 			case (u8)Operator1::Optional:
-			case INSTANCE_ACCESS:
-			case typeSeparator:
+			// case INSTANCE_ACCESS:
+			// case typeSeparator:
 			case scopeResolution:
 			case listSeparator:
 			{

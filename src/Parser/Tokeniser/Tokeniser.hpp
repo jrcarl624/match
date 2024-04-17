@@ -4,14 +4,14 @@
 #include "../../types.hpp"
 #include "../../Types/SlideView.hpp"
 #include "../../Types/RangeGeneration.hpp"
-#include "../../Types/Token.hpp"
+#include "Token.hpp"
+
+
+#define getFirstByte(shor) (static_cast<u8>(shor >> 8))
 
 namespace Match::Parser
 {
-	constexpr inline u8 getFirstByte(u16 shor)
-	{
-		return static_cast<u8>(shor && 0xFF);
-	}
+
 	class Tokenizer
 	{
 	public:
@@ -50,7 +50,7 @@ namespace Match::Parser
 		inline Token CreateToken()
 		{
 
-			Token token = Token(this->m_window, this->row, this->m_window.GetHeadPtr() - this->m_subTokens[this->lastRowIndex]);
+			Token token(this->m_window, reinterpret_cast<uSize>(this->m_window.GetHeadPtr() - this->lastRowIndex), this->row, this->currentType);
 			this->m_window.reset();
 			return token;
 		}
@@ -150,7 +150,6 @@ namespace Match::Parser
 		LessThanOrEqual = '<=',
 		GreaterThanOrEqual = '>='
 	};
-
 	enum class Keywords : u8
 	{
 		Template,

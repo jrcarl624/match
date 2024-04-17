@@ -3,6 +3,19 @@
 
 namespace Match::Parser
 {
+
+    enum TokenType
+    {
+        Whitespace,
+        Comment,
+        Identifier,
+        Keyword,
+        Operator,
+        Literal,
+        Unknown,
+        CharLiteral,
+        StringLiteral,
+    };
     class Token
     {
     public:
@@ -25,17 +38,4 @@ namespace Match::Parser
         uSize m_row = 0;
         TokenType m_type = TokenType::Unknown;
     };
-
-    enum TokenType
-    {
-        Whitespace,
-        Comment,
-        Identifier,
-        Keyword,
-        Operator,
-        Literal,
-        Unknown,
-        CharLiteral,
-        StringLiteral,
-    }
 }
