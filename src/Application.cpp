@@ -16,10 +16,11 @@ namespace Match
     void Application::run()
     {
 
-        //Tokenizer tokenizer;
-        //SlideViewChar source = SlideViewChar("Hello World");
-        //tokenizer.Tokenize(source);
-        //LOG_INFO("Token: {}", token.GetSubTokensAsStr());
-    
+        Parser::Tokenizer tokenizer;
+        SlideViewChar source = SlideViewChar("{\"hello world\"}");
+        auto Tokens = tokenizer.Tokenize(source);
+        for (auto& token : Tokens)
+            LoggerInstance.Log("Token Of Type: {}", LogLevel::LOG_DEBUG, token.ToString());
+
     }
 }

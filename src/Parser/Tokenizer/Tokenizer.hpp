@@ -5,6 +5,7 @@
 #include "../../Types/SlideView.hpp"
 #include "../../Types/RangeGeneration.hpp"
 #include "Token.hpp"
+#include <vector>
 
 
 #define getFirstByte(shor) (static_cast<u8>(shor >> 8))
@@ -14,16 +15,45 @@ namespace Match::Parser
 
 	class Tokenizer
 	{
+		/*
+		  pub fn new(chars: &'cxx [u8], starting_row: isize) -> Self {
+		Tokenizer {
+			sub_tokens: chars,
+			sub_tokens_start: chars.as_ptr(),
+			sub_tokens_end: unsafe { chars.as_ptr().add(chars.len()) },
+			head: chars.as_ptr(),
+			tail: chars.as_ptr(),
+			row: starting_row,
+			incomplete: false,
+			last_row_index: 0,
+		}
+	}
+
+	/// Allows the tokenizer to be reset with new content without reallocation,
+	pub fn reset(&mut self, content: &'cxx [u8], starting_row: isize) {
+		self.sub_tokens = content;
+		self.sub_tokens_start = self.sub_tokens.as_ptr();
+		self.sub_tokens_end = unsafe { self.sub_tokens.as_ptr().add(content.len()) };
+		self.tail = content.as_ptr();
+		self.head = content.as_ptr();
+		self.row = starting_row;
+		self.incomplete = false;
+		self.last_row_index = 0;
+	}*/
 	public:
 		Tokenizer();
+
+		
 		~Tokenizer();
 
-	public:
+		std::vector<Token> Tokenize(SlideViewChar source);
+	
+
 		inline Token NextToken();
 
 		inline void IncrementRow()
 		{
-			this->lastRowIndex = this->m_subTokens.IndexOf(this->m_window.GetHeadPtr()) - this->m_window.Size();
+			this->lastRowIndex = this->m_subTokens.IndexOf(this->m_window.GetHead()) - this->m_window.Size();
 			this->row++;
 		}
 
@@ -31,26 +61,10 @@ namespace Match::Parser
 		{
 			this->currentType = type;
 		}
-		/*
-	/// Creates a new token from the current window
-	#[inline(always)]
-	fn create_next_token(&mut self) -> Token<'cxx> {
-		//dbg!((self.window_head_index(), self.last_row_index));
-
-		let token = Token::new(
-			self.window(),
-			self.row,
-			self.window_head_index() - self.last_row_index,
-		);
-
-		self.window_head_reset();
-		token
-	}*/
-
 		inline Token CreateToken()
 		{
 
-			Token token(this->m_window, reinterpret_cast<uSize>(this->m_window.GetHeadPtr() - this->lastRowIndex), this->row, this->currentType);
+			Token token(this->m_window, reinterpret_cast<uSize>(this->m_window.GetHead() - this->lastRowIndex), this->row, this->currentType);
 			this->m_window.reset();
 			return token;
 		}
@@ -74,10 +88,10 @@ namespace Match::Parser
 		CloseSquareBracket = ']',
 	};
 
-	const u8 listSeparator = ',';
-	const u8 scopeResolution = ';';
-	const u8 typeSeparator = ':';
-	const u8 newLine = '\n';
+	constexpr u8 listSeparator = ',';
+	constexpr u8 scopeResolution = ';';
+	constexpr u8 typeSeparator = ':';
+	constexpr u8 newLine = '\n';
 
 	enum class OtherWhitespace : u8
 	{
@@ -97,9 +111,9 @@ namespace Match::Parser
 
 	};
 
-	const u8 stringQuotes = '"';
-	const u8 charQuotes = '\'';
-	const u8 backslash = '\\';
+	constexpr u8 stringQuotes = '"';
+	constexpr u8 charQuotes = '\'';
+	constexpr u8 backslash = '\\';
 
 	enum class QuotePrefixes : u8
 	{

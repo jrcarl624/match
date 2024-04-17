@@ -14,6 +14,11 @@ namespace Match
             : m_head(start), m_tail(end)
         {
         }
+        SlideViewGeneric(const T *start, const T *end)
+        {
+            m_head = const_cast<T *>(start);
+            m_tail = const_cast<T *>(end);
+        }
 
         SlideViewGeneric(std::string_view view)
             : m_head((T *)view.data()), m_tail((T *)view.data() + view.size())
@@ -29,13 +34,26 @@ namespace Match
         inline void DecTail(uSize offset = 1) { this->m_tail -= offset; }
 
         template <std::integral U = T>
-        inline U Read(i64 offset = 0) const
+        inline U Back(i64 offset = 0) const
+        {
+            return *reinterpret_cast<U *>(m_tail + offset);
+        }
+
+
+        template <std::integral U = T>
+        inline const U &BackRef(i64 offset = 0) const
+        {
+            return *reinterpret_cast<U *>(m_tail + offset);
+        }
+
+        template <std::integral U = T>
+        inline U Front(i64 offset = 0) const
         {
             return *reinterpret_cast<U *>(m_head + offset);
         }
 
         template <std::integral U = T>
-        inline const U &ReadRef(i64 offset = 0) const
+        inline const U &FrontRef(i64 offset = 0) const
         {
             return *reinterpret_cast<U *>(m_head + offset);
         }
@@ -57,9 +75,9 @@ namespace Match
 
         inline uSize Size() const { return this->m_tail - this->m_head; }
 
-        inline bool IsWindowInBounds(uSize n, const SlideViewGeneric<T> &other) const
+        inline bool IsWindowInBounds(uSize n, const SlideViewGeneric<T> &window) const
         {
-            return this->m_tail + n <= other.m_tail;
+            return this->m_tail + n <= window.m_tail;
         }
 
         template <typename U = T>
@@ -82,14 +100,14 @@ namespace Match
 
         inline char operator[](uSize index) { return m_head[index]; }
 
-        inline bool operator==(const SlideViewGeneric<T> &other) const
+        inline bool operator==(const SlideViewGeneric<T> &window) const
         {
-            return this->m_head == other.m_head && this->m_tail == other.m_tail;
+            return this->m_head == window.m_head && this->m_tail == window.m_tail;
         }
 
-        inline bool operator!=(const SlideViewGeneric<T> &other) const
+        inline bool operator!=(const SlideViewGeneric<T> &window) const
         {
-            return m_head != other.m_head || m_tail != other.m_tail;
+            return m_head != window.m_head || m_tail != window.m_tail;
         }
 
         inline void reset()
@@ -103,31 +121,33 @@ namespace Match
             this->IncHead(n);
             this->reset();
         }
+
         /// Gets the index of the pointer in the view
         inline u16 IndexOf(const T *ptr) const
         {
             return ptr - this->m_head;
         }
 
-        inline T GetHead() const
+        inline bool IsWindowExausted(const SlideViewGeneric<T> &window)
         {
-            return *this->m_head;
+            return this->m_tail != window.GetTail();
         }
 
-        inline T GetTail() const
-        {
-            return *this->m_tail;
-        }
+       
 
-        inline const T *GetHeadPtr() const
+        inline const T *GetHead() const
         {
             return this->m_head;
         }
 
-        inline const T *GetTailPtr() const
+        inline const T *GetTail() const
         {
             return this->m_tail;
         }
+
+        // Begin and end of the view
+        inline const T *begin() const { return this->m_head; }
+        inline const T *end() const { return this->m_tail; }
 
     private:
         T *m_head = nullptr;

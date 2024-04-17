@@ -38,6 +38,45 @@ namespace Match::Parser
         void SetSubTokens(SlideViewChar subTokens) { m_subTokens = subTokens; }
         void SetColumn(uSize column) { m_column = column; }
         void SetRow(uSize row) { m_row = row; }
+
+        inline std::string ToString()
+        {
+            switch (m_type)
+            {
+                case TokenType::Whitespace:
+                return "Whitespace";
+            case TokenType::Comment:
+                return "Comment";
+            case TokenType::Identifier:
+                return "Identifier";
+            case TokenType::Keyword:
+                return "Keyword";
+            case TokenType::Operator:
+                return "Operator";
+            case TokenType::Literal:
+                return "Literal";
+            case TokenType::Unknown:
+                return "Unknown";
+            case TokenType::CharLiteral:
+                return "CharLiteral";
+            case TokenType::StringLiteral:
+                return "StringLiteral";
+            case TokenType::Delimiter:
+                return "Delimiter";
+            case TokenType::ListSeparator:
+                return "ListSeparator";
+            case TokenType::TypeSeparator:
+                return "TypeSeparator";
+            case TokenType::InstanceAccess:
+                return "InstanceAccess";
+            case TokenType::ScopeResolution:
+                return "ScopeResolution";
+            default:
+                return "Unknown";
+            }
+            return "Unknown";
+
+        }
     private:
         SlideViewChar m_subTokens = {};
         uSize m_column = 0;

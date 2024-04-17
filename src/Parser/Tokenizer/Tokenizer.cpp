@@ -12,6 +12,18 @@ namespace Match::Parser
 
 	const u8 INSTANCE_ACCESS = '.';
 
+	std::vector<Token> Tokenizer::Tokenize(SlideViewChar source)
+	{
+		std::vector<Token> tokens = {};
+		this->m_subTokens = source;
+		this->m_window = SlideViewChar(source.GetHead(), source.GetHead());
+		this->lastRowIndex = 0;
+
+		while (this->m_subTokens.IsWindowExausted(m_window))
+			tokens.push_back(this->NextToken());
+		return tokens;
+	}
+
 	Token Tokenizer::NextToken()
 	{
 		u8 peek;
@@ -36,8 +48,8 @@ namespace Match::Parser
 
 	next_sub_token:
 
-		// Read the tail of the window
-		switch (peek = this->m_window.Read<u8>())
+		// Back the tail of the window
+		switch (peek = this->m_window.Back<u8>())
 		{
 		case (u8)Whitespace::CarriageReturn:
 		case (u8)Whitespace::FormFeed:
@@ -77,7 +89,7 @@ namespace Match::Parser
 			{
 				this->SetTokenType(TokenType::Operator);
 
-				switch (this->m_window.Read<u16>())
+				switch (this->m_window.Back<u16>())
 				{
 				case (u16)Operator2::Or:
 				case (u16)Operator2::And:
@@ -182,7 +194,7 @@ namespace Match::Parser
 		parse_quote:
 			this->m_window.IncTail();
 
-			switch (peek = this->m_window.Read<u8>())
+			switch (peek = this->m_window.Back<u8>())
 			{
 			case (u8)Whitespace::Newline:
 			{
@@ -190,13 +202,15 @@ namespace Match::Parser
 				// Temp fix for newlines in strings
 				// as this fixes the column calculation
 				this->lastRowIndex -= 2;
+				break;
 			}
 
 			// Backslash
 			case '\\':
 			{
-				if (this->m_window.Read(1) == quote)
+				if (this->m_window.Back(1) == quote)
 					this->m_window.IncTail();
+				goto increment;
 			}
 			// Closing quote
 			default:
@@ -204,7 +218,7 @@ namespace Match::Parser
 				if (peek == quote)
 				{
 					this->m_window.IncTail();
-					goto increment;
+					goto return_token;
 				}
 			}
 			};
