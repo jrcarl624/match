@@ -1,5 +1,5 @@
 #pragma once
-#include "Tokeniser/Tokeniser.hpp"
+#include "Tokenizer/Tokenizer.hpp"
 #include <string>
 
 namespace Match::Parser
@@ -10,7 +10,7 @@ namespace Match::Parser
 		Parser();
 		~Parser();
 	private:
-		Tokenizer tokeniser;
+		Tokenizer Tokenizer;
 	};
 }
 

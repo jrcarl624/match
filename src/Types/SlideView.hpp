@@ -29,13 +29,13 @@ namespace Match
         inline void DecTail(uSize offset = 1) { this->m_tail -= offset; }
 
         template <std::integral U = T>
-        inline U Peak(i64 offset = 0) const
+        inline U Read(i64 offset = 0) const
         {
             return *reinterpret_cast<U *>(m_head + offset);
         }
 
         template <std::integral U = T>
-        inline const U &PeakRef(i64 offset = 0) const
+        inline const U &ReadRef(i64 offset = 0) const
         {
             return *reinterpret_cast<U *>(m_head + offset);
         }

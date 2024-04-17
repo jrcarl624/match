@@ -151,17 +151,17 @@
         }
     }
             
-    builtin fn PeakBack() -> char: {
+    builtin fn ReadBack() -> char: {
         return global::HeadLocation-1;
     }
 
-    builtin fn Peak() -> char: {
+    builtin fn Read() -> char: {
         return global::HeadLocation;
     }
     
 
     builtin rule start_of_line()  {
-        if PeakBack() == '\n' {
+        if ReadBack() == '\n' {
             return true
         }
         return false

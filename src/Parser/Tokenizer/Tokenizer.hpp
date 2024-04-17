@@ -19,7 +19,7 @@ namespace Match::Parser
 		~Tokenizer();
 
 	public:
-		void Tokenize(const SlideViewChar source);
+		inline Token NextToken();
 
 		inline void IncrementRow()
 		{
@@ -107,6 +107,11 @@ namespace Match::Parser
 		Binary = 'b',
 		Unicode = 'u',
 		Formatted = 'f'
+	};
+
+	enum class Quotes :u8 {
+		Single ='\'',
+		Double = '"'
 	};
 
 	enum class Operator1 : u8

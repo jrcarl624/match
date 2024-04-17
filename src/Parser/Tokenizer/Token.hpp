@@ -15,6 +15,12 @@ namespace Match::Parser
         Unknown,
         CharLiteral,
         StringLiteral,
+        Delimiter,
+        ListSeparator,
+        TypeSeparator,
+        InstanceAccess,
+        ScopeResolution,
+
     };
     class Token
     {
