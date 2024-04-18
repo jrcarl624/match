@@ -237,7 +237,7 @@
         }
 
         next_pass {
-            var currentLocation:usize = global::HeadLocation;
+            var currentLocation:u64 = global::HeadLocation;
             if (ReadToken(currentLocation+1) == Symbol && ReadToken(currentLocation-1) != Symbol) {
                 return true
             }

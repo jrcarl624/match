@@ -10,179 +10,129 @@ namespace Match::Parser
 	{
 	}
 
-	const u8 INSTANCE_ACCESS = '.';
-
-	std::vector<Token> Tokenizer::Tokenize(SlideViewChar source)
+	std::vector<Token> Tokenizer::Tokenize(SlideView<u8> source)
 	{
 		std::vector<Token> tokens = {};
 		this->m_subTokens = source;
-		this->m_window = SlideViewChar(source.GetHead(), source.GetHead());
+		this->m_window = this->m_subTokens.Window();
 		this->lastRowIndex = 0;
 
-		while (this->m_subTokens.IsWindowExausted(m_window))
+		while (this->m_subTokens.IsWindowExhausted(m_window))
 			tokens.push_back(this->NextToken());
 		return tokens;
 	}
 
 	Token Tokenizer::NextToken()
 	{
-		u8 peek;
+		u8 peek = this->m_window.Back<u8>();
 		u8 quote;
-		constexpr u8 Or = getFirstByte((u16)Operator2::Or);
-		constexpr u8 And = getFirstByte((u16)Operator2::And);
-		constexpr u8 ShiftLeft = getFirstByte((u16)Operator2::ShiftLeft);
-		constexpr u8 ShiftRight = getFirstByte((u16)Operator2::ShiftRight);
-		constexpr u8 AddAssign = getFirstByte((u16)Operator2::AddAssign);
-		constexpr u8 SubtractAssign = getFirstByte((u16)Operator2::SubtractAssign);
-		constexpr u8 MultiplyAssign = getFirstByte((u16)Operator2::MultiplyAssign);
-		constexpr u8 DivideAssign = getFirstByte((u16)Operator2::DivideAssign);
-		constexpr u8 ModuloAssign = getFirstByte((u16)Operator2::ModuloAssign);
-		constexpr u8 BitwiseAndAssign = getFirstByte((u16)Operator2::BitwiseAndAssign);
-		constexpr u8 BitwiseOrAssign = getFirstByte((u16)Operator2::BitwiseOrAssign);
-		constexpr u8 BitwiseXorAssign = getFirstByte((u16)Operator2::BitwiseXorAssign);
-		constexpr u8 Return = getFirstByte((u16)Operator2::Return);
-		constexpr u8 Equal = getFirstByte((u16)Operator2::Equal);
-		constexpr u8 NotEqual = getFirstByte((u16)Operator2::NotEqual);
-		constexpr u8 LessThanOrEqual = getFirstByte((u16)Operator2::LessThanOrEqual);
-		constexpr u8 GreaterThanOrEqual = getFirstByte((u16)Operator2::GreaterThanOrEqual);
+		u8 commentNestLevel;
 
 	next_sub_token:
-		peek = this->m_window.Back<u8>();
-		// Back the tail of the window
-		switch (peek)
+
+		switch (static_cast<Whitespace_E>(peek))
 		{
-		case (u8)Whitespace::CarriageReturn:
-		case (u8)Whitespace::FormFeed:
-		case (u8)Whitespace::Newline:
-		case (u8)Whitespace::Space:
-		case (u8)Whitespace::Tab:
+		case Whitespace_E::Newline:
+			this->IncrementRow();
+		case Whitespace_E::CarriageReturn:
+		case Whitespace_E::FormFeed:
+		case Whitespace_E::Space:
+		case Whitespace_E::Tab:
 		{
 			this->m_window.Skip();
-
-			if (peek == (u8)Whitespace::Newline)
-				this->IncrementRow();
-
-			goto next_sub_token;
+			goto next_iteration;
 		};
 		}
-		
-		switch (peek)
+
+		// 2 char operators -----------------------
+		switch (this->m_window.Back<OperatorTwo_E>())
 		{
-
-		// 2 char operators
-		case getFirstByte((u16)Operator2::Or):
-		case getFirstByte((u16)Operator2::And):
-		case getFirstByte((u16)Operator2::ShiftLeft):
-		case getFirstByte((u16)Operator2::ShiftRight):
-		case getFirstByte((u16)Operator2::AddAssign):
-		case getFirstByte((u16)Operator2::SubtractAssign):
-		case getFirstByte((u16)Operator2::MultiplyAssign):
-		case getFirstByte((u16)Operator2::DivideAssign):
-		case getFirstByte((u16)Operator2::ModuloAssign):
-			// case getFirstByte((u16)Operator2::BitwiseAndAssign):
-			// case getFirstByte((u16)Operator2::BitwiseOrAssign):
-		case getFirstByte((u16)Operator2::BitwiseXorAssign):
-			// case getFirstByte((u16)Operator2::Return):
-		case getFirstByte((u16)Operator2::Equal):
-		case getFirstByte((u16)Operator2::NotEqual):
-			// case getFirstByte((u16)Operator2::LessThanOrEqual):
-			// case getFirstByte((u16)Operator2::GreaterThanOrEqual):
-			{
-				this->SetTokenType(TokenType::Operator);
-
-				switch (this->m_window.Back<u16>())
-				{
-				case (u16)Operator2::Or:
-				case (u16)Operator2::And:
-				case (u16)Operator2::ShiftLeft:
-				case (u16)Operator2::ShiftRight:
-				case (u16)Operator2::AddAssign:
-				case (u16)Operator2::SubtractAssign:
-				case (u16)Operator2::MultiplyAssign:
-				case (u16)Operator2::DivideAssign:
-				case (u16)Operator2::ModuloAssign:
-				case (u16)Operator2::BitwiseAndAssign:
-				case (u16)Operator2::BitwiseOrAssign:
-				case (u16)Operator2::BitwiseXorAssign:
-				case (u16)Operator2::Return:
-				case (u16)Operator2::Equal:
-				case (u16)Operator2::NotEqual:
-				case (u16)Operator2::LessThanOrEqual:
-				case (u16)Operator2::GreaterThanOrEqual:
-				{
-					this->SetTokenType(TokenType::Operator);
-					this->m_window.IncTail(1);
-					goto increment;
-				}
-				}
-			}
+		case OperatorTwo_E::Or:
+		case OperatorTwo_E::And:
+		case OperatorTwo_E::ShiftLeft:
+		case OperatorTwo_E::ShiftRight:
+		case OperatorTwo_E::AddAssign:
+		case OperatorTwo_E::SubtractAssign:
+		case OperatorTwo_E::MultiplyAssign:
+		case OperatorTwo_E::DivideAssign:
+		case OperatorTwo_E::ModuloAssign:
+		case OperatorTwo_E::Equal:
+		case OperatorTwo_E::BitwiseXorAssign:
+		case OperatorTwo_E::NotEqual:
+		case OperatorTwo_E::BitwiseAndAssign:
+		case OperatorTwo_E::BitwiseOrAssign:
+		case OperatorTwo_E::Return:
+		case OperatorTwo_E::LessThanOrEqual:
+		case OperatorTwo_E::GreaterThanOrEqual:
+		case OperatorTwo_E::ScopeResolution:
+		{
+			this->SetTokenType(Token_E::Operator);
+			this->m_window.IncTail(1);
+			goto next_iteration;
+		}
 		}
 
 		// 1 char operators -----------------------
-		switch (peek)
+		switch (static_cast<OperatorOne_E>(peek))
 		{
-		case (u8)Operator1::Not:
-		case (u8)Operator1::BitwiseOr:
-		case (u8)Operator1::BitwiseAnd:
-		case (u8)Operator1::BitwiseXor:
-		case (u8)Operator1::Add:
-		case (u8)Operator1::Subtract:
-		case (u8)Operator1::Multiply:
-		case (u8)Operator1::Divide:
-		case (u8)Operator1::Modulo:
-		case (u8)Operator1::Equal:
-		// case (u8)Operator1::NotEqual:
-		case (u8)Operator1::LessThan:
-		case (u8)Operator1::GreaterThan:
-		// case (u8)Operator1::Assign:
-		case (u8)Operator1::Access:
-		case (u8)Operator1::Type:
-		case (u8)Operator1::Optional:
+		case OperatorOne_E::Not:
+		case OperatorOne_E::BitwiseOr:
+		case OperatorOne_E::BitwiseAnd:
+		case OperatorOne_E::BitwiseXor:
+		case OperatorOne_E::Add:
+		case OperatorOne_E::Subtract:
+		case OperatorOne_E::Multiply:
+		case OperatorOne_E::Divide:
+		case OperatorOne_E::Modulo:
+		case OperatorOne_E::Equal:
+		case OperatorOne_E::LessThan:
+		case OperatorOne_E::GreaterThan:
+		case OperatorOne_E::Access:
+		case OperatorOne_E::Optional:
 		{
-			this->SetTokenType(TokenType::Operator);
-			goto increment;
+			this->SetTokenType(Token_E::Operator);
+			goto next_iteration;
 		}
 		}
 
 		// Delimiters -----------------------
-		switch (peek)
+		switch (static_cast<Delimiter_E>(peek))
 		{
+		case Delimiter_E::OpenBrace:
+		case Delimiter_E::CloseBrace:
+		case Delimiter_E::OpenParenthesis:
+		case Delimiter_E::CloseParenthesis:
+		case Delimiter_E::OpenSquareBracket:
+		case Delimiter_E::CloseSquareBracket:
+		case Delimiter_E::ListSeparator:
+		case Delimiter_E::TypeSeparator:
+		{
+			this->SetTokenType(Token_E::Delimiter);
 
-		case (u8)Delimiter::OpenBrace:
-		case (u8)Delimiter::CloseBrace:
-		case (u8)Delimiter::OpenParenthesis:
-		case (u8)Delimiter::CloseParenthesis:
-		case (u8)Delimiter::OpenSquareBracket:
-		case (u8)Delimiter::CloseSquareBracket:
-		case listSeparator:
-		case scopeResolution:
-		case typeSeparator:
-		case INSTANCE_ACCESS:
-		{
-			this->SetTokenType(TokenType::Delimiter);
 			// breaks nested switch in loop
 			if (this->m_window.IsPopulated())
 				this->m_window.IncTail();
-			goto increment;
+			goto next_iteration;
 		};
 		}
 
 		// Quotes -----------------------
 		quote = peek;
-		switch (quote)
+		switch (static_cast<Quote_E>(peek))
 		{
-		case (u8)Quotes::Single:
-			this->SetTokenType(TokenType::CharLiteral);
+		case Quote_E::Single:
+			this->SetTokenType(Token_E::CharLiteral);
 			goto parse_quote;
-
-		case (u8)Quotes::Double:
-			this->SetTokenType(TokenType::StringLiteral);
+		case Quote_E::Double:
+			this->SetTokenType(Token_E::StringLiteral);
 		parse_quote:
+
 			this->m_window.IncTail();
 
 			switch (peek = this->m_window.Back<u8>())
 			{
-			case (u8)Whitespace::Newline:
+			// Newline
+			case '\n':
 			{
 				this->IncrementRow();
 				// Temp fix for newlines in strings
@@ -196,19 +146,14 @@ namespace Match::Parser
 			{
 				if (this->m_window.Back(1) == quote)
 					this->m_window.IncTail();
-				goto increment;
+				goto next_iteration;
 			}
+
 			// Closing quote
 			default:
-			{
 				if (peek == quote)
-				{
-					this->m_window.IncTail();
-					goto return_token;
-				}
-			}
+					goto next_iteration;
 			};
-			
 
 			if (this->m_window.IsPopulated())
 				goto parse_quote;
@@ -217,67 +162,95 @@ namespace Match::Parser
 			goto return_token;
 		}
 
-		// Identifiers -----------------------
-		switch (peek)
+		// check for negative numbers
+
+		// Numbers -----------------------
+		if (std::isdigit(peek) && this->m_window.IsEmpty())
 		{
-		case Or:
-		case And:
-		case ShiftLeft:
-		case ShiftRight:
-		case AddAssign:
-		case SubtractAssign:
-		case MultiplyAssign:
-		case DivideAssign:
-		case ModuloAssign:
-		case BitwiseXorAssign:
-			// case BitwiseAndAssign:
-			// case BitwiseOrAssign:
-			// case Return:
-			// case LessThanOrEqual:
-			// case GreaterThanOrEqual:
-		case Equal:
-		case NotEqual:
-		// case (u8)Operator1::Not:
-		// case (u8)Operator1::BitwiseOr:
-		// case (u8)Operator1::BitwiseAnd:
-		// case (u8)Operator1::BitwiseXor:
-		// case (u8)Operator1::Add:
-		// case (u8)Operator1::Subtract:
-		// case (u8)Operator1::Multiply:
-		// case (u8)Operator1::Divide:
-		// case (u8)Operator1::Modulo:
-		// case (u8)Operator1::Equal:
-		// case (u8)Operator1::NotEqual:
-		// case (u8)Operator1::LessThan:
-		// case (u8)Operator1::GreaterThan:
-		//  case (u8)Operator1::Assign:
-		case (u8)Operator1::Access:
-		case (u8)Operator1::Type:
-		case (u8)Operator1::Optional:
-			// case INSTANCE_ACCESS:
-			// case typeSeparator:
-		case scopeResolution:
-		case listSeparator:
-		{
-			this->SetTokenType(TokenType::Identifier);
-			goto increment;
+		number_set:
+
+			this->SetTokenType(Token_E::Number);
+		number:
+			while (std::isdigit(this->m_window.Push<u8>()))
+
+				if (this->m_window.Back<u8>() == '.')
+					goto number;
+
+			goto next_iteration;
 		}
 
-		increment:
-			this->m_window.IncTail();
+		// Comments -----------------------
 
-			if (this->m_window.IsPopulated())
-				goto next_sub_token;
+		if (this->m_window.Back() == '/')
+		{
+			peek = this->m_window.Push();
 
-		return_token:
+			switch (peek)
+			{
+			case static_cast<u8>(Comment_E::MultiLineStart):
 
-			return this->CreateToken();
+				while (this->m_window.Push() != '\n')
+
+					;
+				break;
+			case static_cast<u8>(Comment_E::MultiLineEnd):
+			{
+				commentNestLevel = 1;
+				while (commentNestLevel)
+				{
+					// test an offset of 1
+					switch (this->m_window.Push<Comment_E>())
+					{
+					case Comment_E::MultiLineStart:
+						commentNestLevel++;
+						break;
+					case Comment_E::MultiLineEnd:
+						commentNestLevel--;
+						break;
+					}
+				}
+			}
+			}
+
+			goto next_iteration;
 		}
+
+		// Keywords -----------------------
+
+		// Chars
+		switch (this->m_window.Back<u8>(1))
+		{
+		case static_cast<u8>(OperatorTwo_E::And):
+		case static_cast<u8>(OperatorTwo_E::ShiftLeft):
+		case static_cast<u8>(OperatorTwo_E::ShiftRight):
+		case static_cast<u8>(OperatorTwo_E::AddAssign):
+		case static_cast<u8>(OperatorTwo_E::SubtractAssign):
+		case static_cast<u8>(OperatorTwo_E::MultiplyAssign):
+		case static_cast<u8>(OperatorTwo_E::DivideAssign):
+		case static_cast<u8>(OperatorTwo_E::ModuloAssign):
+		case static_cast<u8>(OperatorTwo_E::BitwiseXorAssign):
+		case static_cast<u8>(OperatorTwo_E::Equal):
+		case static_cast<u8>(OperatorTwo_E::NotEqual):
+		case static_cast<u8>(OperatorOne_E::Access):
+		case static_cast<u8>(OperatorOne_E::Optional):
+		case static_cast<u8>(Delimiter_E::ListSeparator):
+		case static_cast<u8>(Delimiter_E::TypeSeparator):
+
+		{
+			this->SetTokenType(Token_E::Identifier);
+			goto next_iteration;
+		}
+		}
+
+	next_iteration:
+		peek = this->m_window.Push();
+
+		if (this->m_window.IsPopulated())
+			goto next_sub_token;
+
+	return_token:
+		Token token( this->m_window, reinterpret_cast<u64>(this->m_window.GetHead() - this->lastRowIndex), this->row, this->currentType);
+		this->m_window.reset();
+		return token;
 	}
-
-	enum class Quote : u8
-	{
-		Single = '\'',
-		Double = '"',
-	};
 }

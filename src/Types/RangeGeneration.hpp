@@ -6,7 +6,7 @@
 namespace Match
 {
 
-    template<typename T, uSize Start, uSize End>
+    template <typename T, u64 Start, u64 End>
     constexpr std::array<T, End - Start> GenerateRange()
     {
         std::array<T, End - Start> range;
@@ -14,8 +14,8 @@ namespace Match
         return range;
     }
 
-    template<typename T, uSize Start, uSize End>
-    constexpr inline bool IsInRange(uSize value)
+    template <typename T, u64 Start, u64 End>
+    constexpr inline bool IsInRange(u64 value)
     {
         return value >= (T)Start && value < (T)End;
     }

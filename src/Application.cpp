@@ -17,7 +17,7 @@ namespace Match
     {
 
         Parser::Tokenizer tokenizer;
-        SlideViewChar source = SlideViewChar("+=");
+        SlideView<u8> source = SlideView<u8>("+=");
         auto Tokens = tokenizer.Tokenize(source);
         for (auto& token : Tokens)
             LoggerInstance.Log("Token Of Type: {}", LogLevel::LOG_DEBUG, token.ToString());
