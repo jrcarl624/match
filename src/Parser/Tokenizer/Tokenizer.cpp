@@ -27,7 +27,7 @@ namespace Match::Parser {
 
         // Comments -----------------------
 
-        if (this->m_window.Back() == '/') {
+        if (peek == '/') {
             switch (peek = this->m_window.Push()) {
                 case static_cast<u8>(Comment_E::MultiLineStart):
                     while (this->m_window.Push() != '\n');

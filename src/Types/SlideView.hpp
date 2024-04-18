@@ -79,6 +79,7 @@ namespace Match {
         std::basic_string_view<U> ToString() const {
             return std::basic_string_view<U>(this->m_head, this->m_tail - this->m_head);
         }
+
         template <typename U = T>
 
         inline std::basic_string_view<U> operator()() {

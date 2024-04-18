@@ -29,7 +29,7 @@ namespace Match::Parser {
 
         SlideView<u8> GetSubTokens() const { return m_subTokens; }
 
-        std::string_view GetSubTokensAsStr() { return m_subTokens.ToString<char>(); }
+        //std::string_view GetSubTokensAsStr() { return m_subTokens.ToString<char>(); }
 
         u64 GetColumn() const { return m_column; }
         u64 GetRow() const { return m_row; }
