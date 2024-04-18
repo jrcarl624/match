@@ -1,9 +1,9 @@
 #pragma once
 #include "../../Types/SlideView.hpp"
 
-namespace Match::Parser \{
+namespace Match::Parser {
 
-    enum Token_E \{
+    enum Token_E {
         Whitespace,
         Comment,
         Identifier,
@@ -21,7 +21,7 @@ namespace Match::Parser \{
             Number,
     };
 
-    class Token \{
+    class Token {
     public:
         Token(SlideView<u8> subTokens, u64 column, u64 row, Token_E type) : m_subTokens(subTokens), m_column(column), m_row(row), m_type(type) {}
         Token() {}
@@ -39,8 +39,8 @@ namespace Match::Parser \{
         void SetColumn(u64 column) { m_column = column; }
         void SetRow(u64 row) { m_row = row; }
 
-        inline std::string ToString() \{
-            switch (m_type) \{
+        inline std::string ToString() {
+            switch (m_type) {
             case Token_E::Whitespace:
                 return "Whitespace";
             case Token_E::Comment:

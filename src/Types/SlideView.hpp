@@ -74,6 +74,7 @@ namespace Match {
         inline SlideView<U> Window(u64 n = 0) {
             return SlideView<U>(this->m_head, this->m_head + n);
         }
+        
         template <typename U = T>
         std::basic_string_view<U> ToString() const {
             return std::basic_string_view<U>(this->m_head, this->m_tail - this->m_head);

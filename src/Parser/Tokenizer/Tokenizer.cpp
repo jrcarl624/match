@@ -185,23 +185,37 @@ namespace Match::Parser {
             goto increment_and_return;
         }
 
-        // Keywords -----------------------
+        // Chars -----------------------
 
-        // Word -----------------------
-
-        if (std::isalpha(peek) || peek == '_') {
-            this->SetTokenType(Token_E::Identifier);
-        identifier:
-            do {
-                this->m_window.IncTail();
-            } while (std::isalnum(this->m_window.Back<u8>()) || this->m_window.Back<u8>() == '_');
-
-            goto identifier;
-        }
-
-        if (this->m_window.IsPopulated()) {
-            peek = this->m_window.Push();
-            goto next_sub_token;
+        switch (this->m_window.Back<u8>(1)) {
+            case static_cast<u8>(OperatorTwo_E::And):
+            case static_cast<u8>(OperatorTwo_E::ShiftLeft):
+            case static_cast<u8>(OperatorTwo_E::ShiftRight):
+            case static_cast<u8>(OperatorTwo_E::AddAssign):
+            case static_cast<u8>(OperatorTwo_E::SubtractAssign):
+            case static_cast<u8>(OperatorTwo_E::MultiplyAssign):
+            case static_cast<u8>(OperatorTwo_E::DivideAssign):
+            case static_cast<u8>(OperatorTwo_E::ModuloAssign):
+            case static_cast<u8>(OperatorTwo_E::BitwiseXorAssign):
+            case static_cast<u8>(OperatorTwo_E::Equal):
+            case static_cast<u8>(OperatorTwo_E::NotEqual):
+            case static_cast<u8>(OperatorOne_E::Access):
+            case static_cast<u8>(OperatorOne_E::Optional):
+            case static_cast<u8>(Delimiter_E::ListSeparator):
+            case static_cast<u8>(Delimiter_E::TypeSeparator):
+            case static_cast<u8>(Delimiter_E::OpenBrace):
+            case static_cast<u8>(Delimiter_E::CloseBrace):
+            case static_cast<u8>(Delimiter_E::OpenParenthesis):
+            case static_cast<u8>(Delimiter_E::CloseParenthesis):
+            case static_cast<u8>(Delimiter_E::OpenSquareBracket):
+            case static_cast<u8>(Delimiter_E::CloseSquareBracket): {
+                this->SetTokenType(Token_E::Identifier);
+                if (this->m_window.IsPopulated())
+                {
+                    peek = this->m_window.Push();
+                    goto next_sub_token;
+                }
+            }
         }
 
     increment_and_return:

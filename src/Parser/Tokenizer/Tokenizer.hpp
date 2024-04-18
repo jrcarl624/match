@@ -10,9 +10,9 @@
 // ((val & 0xFF00) >> 8) | ((val & 0x00FF) << 8)
 #define swapEndian(shor) ((shor & 0xFF00) >> 8) | ((shor & 0x00FF) << 8)
 
-namespace Match::Parser \{
+namespace Match::Parser {
 
-	class Tokenizer \{
+	class Tokenizer {
 	public:
 		Tokenizer();
 		~Tokenizer();
@@ -21,12 +21,12 @@ namespace Match::Parser \{
 
 		inline Token NextToken();
 
-		inline void IncrementRow() \{
+		inline void IncrementRow() {
 			this->lastRowIndex = this->m_subTokens.IndexOf(this->m_window.GetHead()) - this->m_window.Size();
 			this->row++;
 		}
 
-		inline void SetTokenType(Token_E type) \{
+		inline void SetTokenType(Token_E type) {
 			this->currentType = type;
 		}
 
@@ -38,7 +38,7 @@ namespace Match::Parser \{
 		Token_E currentType = Token_E::Unknown;
 	};
 
-	enum class Delimiter_E : u8 \{
+	enum class Delimiter_E : u8 {
 		OpenBrace = '{',
 		CloseBrace = '}',
 		OpenParenthesis = '(',
@@ -49,7 +49,7 @@ namespace Match::Parser \{
 		ListSeparator = ',',
 	};
 
-	enum class Whitespace_E : u8 \{
+	enum class Whitespace_E : u8 {
 		Tab = '\t',
 		FormFeed = '\x0C',
 		CarriageReturn = '\r',
@@ -57,19 +57,19 @@ namespace Match::Parser \{
 		Newline = '\n'
 	};
 
-	enum class QuotePrefix : u8 \{
+	enum class QuotePrefix : u8 {
 		Raw = 'r',
 		Binary = 'b',
 		Unicode = 'u',
 		Formatted = 'f'
 	};
 
-	enum class Quote_E : u8 \{
+	enum class Quote_E : u8 {
 		Single = '\'',
 		Double = '"'
 	};
 
-	enum class OperatorOne_E : u8 \{
+	enum class OperatorOne_E : u8 {
 		BitwiseOr = '|',
 		BitwiseAnd = '&',
 		BitwiseXor = '^',
@@ -87,7 +87,7 @@ namespace Match::Parser \{
 		Optional = '?',
 	};
 
-	enum class OperatorTwo_E : u16 \{
+	enum class OperatorTwo_E : u16 {
 		Or = swapEndian('||'),
 		And = swapEndian('&&'),
 		ShiftLeft = swapEndian('<<'),
@@ -108,13 +108,13 @@ namespace Match::Parser \{
 		ScopeResolution = swapEndian('::'),
 	};
 
-	enum Comment_E : u16 \{
+	enum Comment_E : u16 {
 		SingleLine = swapEndian('//'),
 		MultiLineStart = swapEndian('/*'),
 		MultiLineEnd = swapEndian('*/'),
 	};
 
-	enum class Keyword_E : u8 \{
+	enum class Keyword_E : u8 {
 		Template,
 		Abstract,
 		Statement,

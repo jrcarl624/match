@@ -2,8 +2,8 @@
 #include "Tokenizer/Tokenizer.hpp"
 #include <string>
 
-namespace Match::Parser \{
-	class Parser \{
+namespace Match::Parser {
+	class Parser {
 	public:
 		Parser();
 		~Parser();
