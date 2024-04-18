@@ -30,6 +30,39 @@ namespace Match::Parser
 
 	next_sub_token:
 
+		// Comments -----------------------
+
+		if (this->m_window.Back() == '/')
+		{
+			switch (peek = this->m_window.Push())
+			{
+			case static_cast<u8>(Comment_E::MultiLineStart):
+
+				while (this->m_window.Push() != '\n')
+					;
+				goto increment_and_return;
+			case static_cast<u8>(Comment_E::MultiLineEnd):
+			{
+				commentNestLevel = 1;
+				do
+				{
+					// test an offset of 1
+					switch (this->m_window.Push<Comment_E>(1))
+					{
+					case Comment_E::MultiLineStart:
+						commentNestLevel++;
+						break;
+					case Comment_E::MultiLineEnd:
+						commentNestLevel--;
+						break;
+					}
+				} while (commentNestLevel);
+				
+				goto increment_and_return;
+			}
+			}
+		}
+
 		switch (static_cast<Whitespace_E>(peek))
 		{
 		case Whitespace_E::Newline:
@@ -40,7 +73,7 @@ namespace Match::Parser
 		case Whitespace_E::Tab:
 		{
 			this->m_window.Skip();
-			goto next_iteration;
+			goto increment_and_return;
 		};
 		}
 
@@ -68,7 +101,7 @@ namespace Match::Parser
 		{
 			this->SetTokenType(Token_E::Operator);
 			this->m_window.IncTail(1);
-			goto next_iteration;
+			goto increment_and_return;
 		}
 		}
 
@@ -91,7 +124,7 @@ namespace Match::Parser
 		case OperatorOne_E::Optional:
 		{
 			this->SetTokenType(Token_E::Operator);
-			goto next_iteration;
+			goto increment_and_return;
 		}
 		}
 
@@ -112,7 +145,7 @@ namespace Match::Parser
 			// breaks nested switch in loop
 			if (this->m_window.IsPopulated())
 				this->m_window.IncTail();
-			goto next_iteration;
+			goto increment_and_return;
 		};
 		}
 
@@ -127,9 +160,7 @@ namespace Match::Parser
 			this->SetTokenType(Token_E::StringLiteral);
 		parse_quote:
 
-			this->m_window.IncTail();
-
-			switch (peek = this->m_window.Back<u8>())
+			switch (peek = this->m_window.Push<u8>())
 			{
 			// Newline
 			case '\n':
@@ -146,13 +177,13 @@ namespace Match::Parser
 			{
 				if (this->m_window.Back(1) == quote)
 					this->m_window.IncTail();
-				goto next_iteration;
+				goto increment_and_return;
 			}
 
 			// Closing quote
 			default:
 				if (peek == quote)
-					goto next_iteration;
+					goto increment_and_return;
 			};
 
 			if (this->m_window.IsPopulated())
@@ -172,47 +203,12 @@ namespace Match::Parser
 			this->SetTokenType(Token_E::Number);
 		number:
 			while (std::isdigit(this->m_window.Push<u8>()))
+				;
 
-				if (this->m_window.Back<u8>() == '.')
-					goto number;
+			if (this->m_window.Back<u8>() == '.')
+				goto number;
 
-			goto next_iteration;
-		}
-
-		// Comments -----------------------
-
-		if (this->m_window.Back() == '/')
-		{
-			peek = this->m_window.Push();
-
-			switch (peek)
-			{
-			case static_cast<u8>(Comment_E::MultiLineStart):
-
-				while (this->m_window.Push() != '\n')
-
-					;
-				break;
-			case static_cast<u8>(Comment_E::MultiLineEnd):
-			{
-				commentNestLevel = 1;
-				while (commentNestLevel)
-				{
-					// test an offset of 1
-					switch (this->m_window.Push<Comment_E>())
-					{
-					case Comment_E::MultiLineStart:
-						commentNestLevel++;
-						break;
-					case Comment_E::MultiLineEnd:
-						commentNestLevel--;
-						break;
-					}
-				}
-			}
-			}
-
-			goto next_iteration;
+			goto increment_and_return;
 		}
 
 		// Keywords -----------------------
@@ -235,21 +231,27 @@ namespace Match::Parser
 		case static_cast<u8>(OperatorOne_E::Optional):
 		case static_cast<u8>(Delimiter_E::ListSeparator):
 		case static_cast<u8>(Delimiter_E::TypeSeparator):
-
+		case static_cast<u8>(Delimiter_E::OpenBrace):
+		case static_cast<u8>(Delimiter_E::CloseBrace):
+		case static_cast<u8>(Delimiter_E::OpenParenthesis):
+		case static_cast<u8>(Delimiter_E::CloseParenthesis):
+		case static_cast<u8>(Delimiter_E::OpenSquareBracket):
+		case static_cast<u8>(Delimiter_E::CloseSquareBracket):
 		{
 			this->SetTokenType(Token_E::Identifier);
-			goto next_iteration;
+			if (this->m_window.IsPopulated())
+			{
+				peek = this->m_window.Push();
+				goto next_sub_token;
+			}
 		}
-		}
+		}  
 
-	next_iteration:
-		peek = this->m_window.Push();
-
-		if (this->m_window.IsPopulated())
-			goto next_sub_token;
+	increment_and_return:
+		this->m_window.IncTail();
 
 	return_token:
-		Token token( this->m_window, reinterpret_cast<u64>(this->m_window.GetHead() - this->lastRowIndex), this->row, this->currentType);
+		Token token(this->m_window, reinterpret_cast<u64>(this->m_window.GetHead() - this->lastRowIndex), this->row, this->currentType);
 		this->m_window.reset();
 		return token;
 	}
