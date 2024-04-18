@@ -176,8 +176,8 @@ namespace Match::Parser {
         if (std::isdigit(peek) && this->m_window.IsEmpty()) {
             this->SetTokenType(Token_E::Number);
         number:
-            while (std::isdigit(this->m_window.Push<u8>()))
-                ;
+            while (std::isdigit(this->m_window.Push<u8>())) {}
+
 
             if (this->m_window.Back<u8>() == '.')
                 goto number;
@@ -199,14 +199,9 @@ namespace Match::Parser {
             goto identifier;
         }
 
-        switch (this->m_window.Back<u8>(1)) {
-            {
-                this->SetTokenType(Token_E::Identifier);
-                if (this->m_window.IsPopulated()) {
-                    peek = this->m_window.Push();
-                    goto next_sub_token;
-                }
-            }
+        if (this->m_window.IsPopulated()) {
+            peek = this->m_window.Push();
+            goto next_sub_token;
         }
 
     increment_and_return:

@@ -5,11 +5,9 @@
 #include <fstream>
 #include <iomanip>
 
-namespace Match
-{
+namespace Match \{
 	Logger LoggerInstance;
-	const std::string LogLevelToTerminalColor(const LogLevel level)
-	{
+	const std::string LogLevelToTerminalColor(const LogLevel level) \{
 		/*
 		* Info - Green
 		* Debug - Blue
@@ -17,8 +15,7 @@ namespace Match
 		* Error - Red
 		* Fatal - Purple
 		*/
-		switch (level)
-		{
+		switch (level) \{
             case LogLevel::LOG_INFO:
 			return "\033[1;32m";
 		case LogLevel::LOG_DEBUG:
@@ -33,10 +30,8 @@ namespace Match
 			return "\033[1;39m";
 		}
 	}
-	std::string& operator<<(std::string& str, const LogLevel level)
-	{
-		switch (level)
-		{
+	std::string& operator<<(std::string& str, const LogLevel level) \{
+		switch (level) \{
 		case LogLevel::LOG_INFO:
 			str.insert(0, LogLevelToTerminalColor(level) + "[INFO] ");
 			return str;
@@ -60,10 +55,8 @@ namespace Match
 			return str;
 		}
 	}
-	std::stringstream& operator<<(std::stringstream& str, const LogLevel level)
-	{
-		switch (level)
-		{
+	std::stringstream& operator<<(std::stringstream& str, const LogLevel level) \{
+		switch (level) \{
 		case LogLevel::LOG_INFO:
 			str << LogLevelToTerminalColor(level) << "[INFO] ";
 			return str;
@@ -87,15 +80,13 @@ namespace Match
 			return str;
 		}
 	}
-	void Logger::RawLog(const std::string& message)
-	{
+	void Logger::RawLog(const std::string& message) \{
 		std::printf("%s\n", message.c_str());
 		this->m_currentBuffer->Push(message);
 		if (++m_logCount % LOG_FLUSH_CONSTANT == 0)
 			Flush();
 	}
-	void Logger::Log(const std::string& message, LogLevel level)
-	{
+	void Logger::Log(const std::string& message, LogLevel level) \{
 		std::stringstream ss;
 		// Calculate current time to add to the start of the log
 		auto now = std::chrono::system_clock::now();
@@ -107,8 +98,7 @@ namespace Match
 		if (level == LogLevel::LOG_FATAL) [[unlikely]]
 			std::exit(EXIT_FAILURE);
 	}
-	void Logger::Flush(bool invokeNewThread)
-	{
+	void Logger::Flush(bool invokeNewThread) \{
 		if (invokeNewThread)
 			std::jthread flusher(&Logger::Flush, this, false);
 		this->m_buffPointerMutex.lock();

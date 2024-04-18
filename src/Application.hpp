@@ -2,10 +2,8 @@
 #include "Parser/Parser.hpp"
 
 
-namespace Match
-{
-    class Application
-    {
+namespace Match \{
+    class Application \{
     public:
         Application();
         ~Application();

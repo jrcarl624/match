@@ -12,10 +12,8 @@
 #endif // !LOG_FLUSH_CONSTANT
 
 
-namespace Match
-{
-	enum class LogLevel : unsigned char
-	{
+namespace Match \{
+	enum class LogLevel : unsigned char \{
 		LOG_INFO,
 		LOG_DEBUG,
 		LOG_WARNING,
@@ -65,42 +63,36 @@ namespace Match
 	std::stringstream& operator<<(std::stringstream& str, const LogLevel level);
 
 	template<size_t BuffMaxSize>
-	class StaticBuffer
-	{
+	class StaticBuffer \{
 	public:
 		StaticBuffer() = default;
 		~StaticBuffer() = default;
-		StaticBuffer(const StaticBuffer& other)
-		{
+		StaticBuffer(const StaticBuffer& other) \{
 			std::lock_guard<std::mutex> lock(m_mutex);
 			m_currentIndex = 0;
 			std::copy(other.m_buffer.begin(), other.m_buffer.end(), m_buffer.begin());
 		}
-		StaticBuffer& operator=(const StaticBuffer& other)
-		{
+		StaticBuffer& operator=(const StaticBuffer& other) \{
 			std::lock_guard<std::mutex> lock(m_mutex);
 			m_currentIndex = 0;
 			std::copy(other.m_buffer.begin(), other.m_buffer.end(), m_buffer.begin());
 			return *this;
 		}
 
-		StaticBuffer(StaticBuffer&& other)
-		{
+		StaticBuffer(StaticBuffer&& other) \{
 			std::lock_guard<std::mutex> lock(m_mutex);
 			m_currentIndex = 0;
 			std::move(other.m_buffer.begin(), other.m_buffer.end(), m_buffer.begin());
 		}
 
-		void Push(const std::string& message)
-		{
+		void Push(const std::string& message) \{
 			std::lock_guard<std::mutex> lock(m_mutex);
 			m_buffer[m_currentIndex] = message;
 			m_currentIndex++;
 		}
 
 		template<typename Func, typename... Args>
-		void ForEach(Func func, Args&&... args)
-		{
+		void ForEach(Func func, Args&&... args) \{
 			std::lock_guard<std::mutex> lock(m_mutex);
 			for (size_t i = 0; i < m_currentIndex; i++)
 				func(m_buffer[i], std::forward<Args>(args)...);
@@ -114,8 +106,7 @@ namespace Match
 		std::mutex m_mutex;
 	};
 
-	class Logger
-	{
+	class Logger \{
 	public:
 		Logger() = default;
 		~Logger() {
@@ -126,8 +117,7 @@ namespace Match
 		void RawLog(const std::string& message);
 		void Log(const std::string& message, LogLevel level);
 		template<typename... Args>
-		void Log(const std::string& message, LogLevel level, Args&&... arg)
-		{
+		void Log(const std::string& message, LogLevel level, Args&&... arg) \{
 			Log(FormatString<Args...>(message, std::forward<Args>(arg)...), level);
 		}
 		void Flush(bool invokeNewThread=true);

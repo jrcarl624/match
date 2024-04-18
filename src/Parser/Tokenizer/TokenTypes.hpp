@@ -1,9 +1,7 @@
 #pragma once
 
-namespace Match
-{
-    enum class Token : unsigned long long
-	{
+namespace Match \{
+    enum class Token : unsigned long long \{
 		// Keywords
 		Pattern,
 		Template,

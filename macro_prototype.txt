@@ -241,8 +241,7 @@
             if (ReadToken(currentLocation+1) == Symbol && ReadToken(currentLocation-1) != Symbol) {
                 return true
             }
-            else 
-            {
+            else  \{
                 return false
             }
         }
@@ -574,8 +573,7 @@
     agnostic pattern SquareBrackets<middle> : Parent[Delimit('"' ,middle, '"')]
 
 
-    abstract pattern AbstractSearcher<start: Pattern, middle:Pattern ,end?: Pattern = start>
-    {
+    abstract pattern AbstractSearcher<start: Pattern, middle:Pattern ,end?: Pattern = start> \{
         start;
         middle;
         end;

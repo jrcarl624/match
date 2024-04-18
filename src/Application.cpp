@@ -1,20 +1,16 @@
 #include "Application.hpp"
 #include "Logs/Logs.hpp"
 #include "Parser/Tokenizer/Tokenizer.hpp"
-namespace Match
-{
-    Application::Application()
-    {
+namespace Match \{
+    Application::Application() \{
         run();
     }
 
-    Application::~Application()
-    {
+    Application::~Application() \{
         
     }
 
-    void Application::run()
-    {
+    void Application::run() \{
 
         Parser::Tokenizer tokenizer;
         SlideView<u8> source = SlideView<u8>("+=");
