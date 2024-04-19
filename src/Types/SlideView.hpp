@@ -34,9 +34,9 @@ namespace Match {
         }
 
         template <typename U = T>
-        inline U Push(i64 offset = 0) {
-            this->IncTail(offset);
-            return this->Back<U>(offset);
+        inline U Push(i64 incOffset = 1, i64 peekOffset = 0) {
+            this->IncTail(incOffset);
+            return this->Back<U>(peekOffset);
         }
 
         template <typename U = T>
@@ -45,9 +45,9 @@ namespace Match {
         }
 
         template <typename U = T>
-        inline U Pop(i64 offset = 0) {
-            this->IncHead(offset);
-            return this->Front<U>(offset);
+        inline U Pop(i64 incOffset = 1, i64 peekOffset = 0) {
+            this->IncHead(incOffset);
+            return this->Front<U>(peekOffset);
         }
 
         inline bool IsEmpty() const {
@@ -55,11 +55,11 @@ namespace Match {
         }
 
         inline bool IsPopulated() const {
-            return this->m_head != this->m_tail;
+            return this->m_tail > this->m_head;
         }
 
         template <typename U = T>
-        inline SlideView<U> SubView(i64 start, i64 end) {
+        inline SlideView<U> SubView(i64 start = 0, i64 end = 0) {
             return SlideView<T>(this->m_head + start, this->m_head + end);
         }
 
@@ -67,14 +67,11 @@ namespace Match {
 
         template <typename U = T>
         inline bool IsWindowInBounds(u64 n, const SlideView<U>& window) const {
-            return this->m_tail + n <= window.m_tail;
+            return window.m_tail + n > this->m_tail ;
         }
 
-        template <typename U = T>
-        inline SlideView<U> Window(u64 n = 0) {
-            return SlideView<U>(this->m_head, this->m_head + n);
-        }
-        
+
+
         template <typename U = T>
         std::basic_string_view<U> ToString() const {
             return std::basic_string_view<U>(this->m_head, this->m_tail - this->m_head);
@@ -98,23 +95,30 @@ namespace Match {
             return m_head != window.m_head || m_tail != window.m_tail;
         }
 
-        inline void reset() {
+        inline void resetHead() {
             this->m_head = this->m_tail;
         }
 
         inline void Skip(u64 n = 1) {
 
-            this->IncHead(n);
-            this->reset();
+            this->IncTail(n);
+            this->resetHead();
         }
+
 
         /// Gets the index of the pointer in the view
         inline u16 IndexOf(const T* ptr) const {
             return ptr - this->m_head;
         }
 
-        inline bool IsWindowExhausted(const SlideView<T>& window) {
-            return this->m_tail != window.GetTail();
+        // TODO: Rename these?
+
+        inline bool IsSubViewInBounds(const SlideView<T>& subView) {
+            return subView.GetTail() < this->m_tail;
+        }
+
+        inline bool IsSubViewAtEnd(const SlideView<T>& subView) {
+            return this->m_tail == subView.GetTail();
         }
 
         inline const T* GetHead() const {

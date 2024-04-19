@@ -19,6 +19,7 @@ namespace Match::Parser {
         InstanceAccess,
         ScopeResolution,
             Number,
+            Operator_2,
     };
 
     class Token {

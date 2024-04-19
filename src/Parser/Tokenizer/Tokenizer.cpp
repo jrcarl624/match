@@ -1,6 +1,7 @@
 #include "Tokenizer.hpp"
 #include <cstdint>
 #include "../../Types/SlideView.hpp"
+#include "../../Logs/Logs.hpp"
 namespace Match::Parser {
     Tokenizer::Tokenizer() {
     }
@@ -10,21 +11,27 @@ namespace Match::Parser {
     std::vector<Token> Tokenizer::Tokenize(SlideView<u8> source) {
         std::vector<Token> tokens = {};
         this->m_subTokens = source;
-        this->m_window = this->m_subTokens.Window();
+        this->m_window = this->m_subTokens.SubView();
         this->lastRowIndex = 0;
 
-        while (this->m_subTokens.IsWindowExhausted(m_window))
-            tokens.push_back(this->NextToken());
+        while (this->m_subTokens.IsSubViewInBounds(m_window))
+        {
+            Token token = this->NextToken();
+
+            LoggerInstance.Log("Token Of Type: {}", LogLevel::LOG_DEBUG, token.ToString());
+            tokens.push_back(token);
+        };
         return tokens;
     }
 
     Token Tokenizer::NextToken() {
-        u8 peek = this->m_window.Back<u8>();
+        u8 peek;
+
         u8 quote;
         u8 commentNestLevel;
 
     next_sub_token:
-
+        peek = this->m_window.Back();
         // Comments -----------------------
 
         if (peek == '/') {
@@ -59,7 +66,7 @@ namespace Match::Parser {
             case Whitespace_E::Space:
             case Whitespace_E::Tab: {
                 this->m_window.Skip();
-                goto increment_and_return;
+                goto next_sub_token;
             };
         }
 
@@ -83,7 +90,7 @@ namespace Match::Parser {
             case OperatorTwo_E::LessThanOrEqual:
             case OperatorTwo_E::GreaterThanOrEqual:
             case OperatorTwo_E::ScopeResolution: {
-                this->SetTokenType(Token_E::Operator);
+                this->SetTokenType(Token_E::Operator_2);
                 this->m_window.IncTail(1);
                 goto increment_and_return;
             }
@@ -130,16 +137,15 @@ namespace Match::Parser {
         }
 
         // Quotes -----------------------
-        quote = peek;
         switch (static_cast<Quote_E>(peek)) {
             case Quote_E::Single:
-                this->SetTokenType(Token_E::CharLiteral);
-                goto parse_quote;
             case Quote_E::Double:
-                this->SetTokenType(Token_E::StringLiteral);
-            parse_quote:
+                this->SetTokenType(Token_E::Literal);
+                quote = peek;
+                peek = this->m_window.Push<u8>();
 
-                switch (peek = this->m_window.Push<u8>()) {
+            parse_quote:
+                switch (peek) {
                     // Newline
                     case '\n': {
                         this->IncrementRow();
@@ -161,8 +167,8 @@ namespace Match::Parser {
                         if (peek == quote)
                             goto increment_and_return;
                 };
-
-                if (this->m_window.IsPopulated())
+                peek = this->m_window.Push<u8>();
+                if (this->m_subTokens.IsSubViewInBounds(m_window))
                     goto parse_quote;
 
                 // TODO: Throw compiler error if incomplete
@@ -208,22 +214,30 @@ namespace Match::Parser {
             case static_cast<u8>(Delimiter_E::OpenParenthesis):
             case static_cast<u8>(Delimiter_E::CloseParenthesis):
             case static_cast<u8>(Delimiter_E::OpenSquareBracket):
+            case static_cast<u8>(Whitespace_E::CarriageReturn):
+            case static_cast<u8>(Whitespace_E::FormFeed):
+            case static_cast<u8>(Whitespace_E::Newline):
+            case static_cast<u8>(Whitespace_E::Space):
+            case static_cast<u8>(Whitespace_E::Tab):
             case static_cast<u8>(Delimiter_E::CloseSquareBracket): {
                 this->SetTokenType(Token_E::Identifier);
-                if (this->m_window.IsPopulated())
-                {
-                    peek = this->m_window.Push();
-                    goto next_sub_token;
-                }
+                goto increment_and_return;
             }
         }
+        this->m_window.IncTail();
+
+        if (this->m_subTokens.IsSubViewInBounds(m_window)) 
+            goto next_sub_token;
+        
 
     increment_and_return:
         this->m_window.IncTail();
 
+
     return_token:
         Token token(this->m_window, reinterpret_cast<u64>(this->m_window.GetHead() - this->lastRowIndex), this->row, this->currentType);
-        this->m_window.reset();
+        this->m_window.resetHead();
+        this->SetTokenType(Token_E::Unknown);
         return token;
     }
 }
