@@ -24,7 +24,7 @@ namespace Match::Parser {
 
 
     Token Lexer::NextToken() {
-        this -> next = 0;
+        this->next = 0;
         this->quote = 0;
     next_sub_token:
         this->current = this->m_window.Back();
@@ -41,7 +41,7 @@ namespace Match::Parser {
                 this->m_window.SkipTail();
                 goto next_sub_token;
 
-        // Operators -----------------------
+                // Operators -----------------------
             case Token_E::Divide:
 
                 // Comments -----------------------
@@ -102,7 +102,7 @@ namespace Match::Parser {
                     goto increment_and_return;
                 }
 
-            // Delimiters -----------------------
+                                   // Delimiters -----------------------
             case Token_E::OpenCurlyBracket:
             case Token_E::CloseCurlyBracket:
             case Token_E::OpenRoundBracket:
@@ -113,12 +113,11 @@ namespace Match::Parser {
             case Token_E::SemiColon: {
                     this->SetTokenType(this->current);
 
-                    // breaks nested switch in loop
                     if (this->m_window.IsPopulated())
                         this->m_window.IncTail();
                     goto increment_and_return;
                 };
-            // Quotes -----------------------
+                                       // Quotes -----------------------
             case Token_E::StringLiteral:
             case Token_E::CharLiteral: {
                     this->SetTokenType(this->current);
@@ -136,14 +135,14 @@ namespace Match::Parser {
                                 break;
                             }
 
-                        // Backslash
+                                     // Backslash
                         case '\\': {
                                 if (this->m_window.Back(1) == quote)
                                     this->m_window.IncTail();
                                 break;
                             }
 
-                        // Closing quote
+                                     // Closing quote
                         default:
                             if (this->current == quote)
                                 goto increment_and_return;
@@ -158,7 +157,8 @@ namespace Match::Parser {
                     this->incomplete = true;
                     goto return_token;
                 };
-            // Numeric Literals -----------------------
+
+                // Numeric Literals -----------------------
             case Token_E::Zero:
             case Token_E::One:
             case Token_E::Two:
@@ -192,7 +192,7 @@ namespace Match::Parser {
                     };
                 }
 
-            // Identifiers -----------------------
+                                  // Identifiers -----------------------
             case Token_E::Upper_A:
             case Token_E::Upper_B:
             case Token_E::Upper_C:
@@ -246,10 +246,9 @@ namespace Match::Parser {
             case Token_E::Lower_Y:
             case Token_E::Lower_Z:
             case Token_E::Underscore: {
-                    this->current = this->m_window.PushBack<u8>();
                     this->SetTokenType(Token_E::Identifier);
                 identifier:
-                    switch (static_cast<Token_E>(this->current)) {
+                    switch (this->m_window.Back<Token_E>(1)) {
                         case Token_E::Upper_A:
                         case Token_E::Upper_B:
                         case Token_E::Upper_C:
@@ -312,19 +311,17 @@ namespace Match::Parser {
                         case Token_E::Six:
                         case Token_E::Seven:
                         case Token_E::Eight:
-                        case Token_E::Nine: {
-                                this->current = this->m_window.PushBack<u8>();
+                        case Token_E::Nine:
+                            {
                                 if (this->m_subTokens.IsSubViewInBounds(m_window)) {
-                                    goto identifier;
+                                    this->m_window.IncTail();
                                 }
-                                goto return_token;
+                                goto identifier;
                             }
-
                     }
                     goto increment_and_return;
                 }
-
-            // Invalid Tokens -----------------------
+                                // Invalid Tokens -----------------------
             default:
                 this->SetTokenType(Token_E::Invalid);
                 goto increment_and_return;
