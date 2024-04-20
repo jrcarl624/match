@@ -32,12 +32,32 @@ namespace Match {
         inline U Back(i64 offset = 0) const {
             return *reinterpret_cast<U*>(m_tail + offset);
         }
+        // reads a number of bytes depending the size of U and reads the slice of bytes and compares them to the slice of bytes in the view
+        template <typename U = T>
+        inline bool PeekBack(const U* slice, u64 offset = 0) const {
+            return memcmp(slice, m_tail + offset, sizeof(U)) == 0;
+        }
 
         template <typename U = T>
-        inline U Push(i64 incOffset = 1, i64 peekOffset = 0) {
+        inline U PushBack(i64 incOffset = 1, i64 peekOffset = 0) {
             this->IncTail(incOffset);
             return this->Back<U>(peekOffset);
         }
+
+        // TODO: Rename this method to something more descriptive
+        template <typename U = T>
+        inline bool IncIfPeekBack(U* value, i64 offset = 1) {
+            if (this->PeekBack<U>(value)) {
+                this->IncTail(offset);
+                return true;
+            }
+            return false;
+        }
+        // todo make front methods
+
+
+
+
 
         template <typename U = T>
         inline U Front(i64 offset = 0) const {
@@ -45,10 +65,33 @@ namespace Match {
         }
 
         template <typename U = T>
-        inline U Pop(i64 incOffset = 1, i64 peekOffset = 0) {
+        inline U PushFront(i64 incOffset = 1, i64 peekOffset = 0) {
             this->IncHead(incOffset);
             return this->Front<U>(peekOffset);
         }
+
+        /*
+        TODO: Test These.
+
+        template <typename U = T>
+        inline U PopFront(i64 decOffset = 1, i64 peekOffset = 0) {
+            this->IncHead(-decOffset);
+            return this->Front<U>(peekOffset -1);
+        }
+
+        template <typename U = T>
+        inline U PopBack(i64 decOffset = 1, i64 peekOffset = 0) {
+            this->IncTail(-decOffset);
+            return this->Back<U>(peekOffset + 1);
+        }
+        */
+
+        inline void SetHead(T* head) { this->m_head = head; }
+
+        inline void SetTail(T* tail) { this->m_tail = tail; }
+
+
+
 
         inline bool IsEmpty() const {
             return this->m_head == this->m_tail;
@@ -95,14 +138,23 @@ namespace Match {
             return m_head != window.m_head || m_tail != window.m_tail;
         }
 
-        inline void resetHead() {
+        inline void SetHeadToTail() {
             this->m_head = this->m_tail;
         }
 
-        inline void Skip(u64 n = 1) {
+        inline void SetTailToHead() {
+            this->m_tail = this->m_head;
+        }
+
+        inline void SkipTail(u64 n = 1) {
 
             this->IncTail(n);
-            this->resetHead();
+            this->SetHeadToTail();
+        }
+
+        inline void SkipHead(u64 n = 1) {
+            this->IncHead(n);
+            this->SetTailToHead();
         }
 
 

@@ -12,12 +12,12 @@
 
 namespace Match::Parser {
 
-	class Tokenizer {
-	public:
-		Tokenizer();
-		~Tokenizer();
+	class Lexer {
+		public:
+		Lexer();
+		~Lexer();
 
-		std::vector<Token> Tokenize(SlideView<u8> source);
+		std::vector<Token> Lex(SlideView<u8> source);
 
 		inline Token NextToken();
 
@@ -26,87 +26,37 @@ namespace Match::Parser {
 			this->row++;
 		}
 
+		inline void SetTokenType(u8 byte) {
+			this->currentType = static_cast<Token_E>(byte);
+		}
+
 		inline void SetTokenType(Token_E type) {
 			this->currentType = type;
 		}
 
-	private:
+		template <typename T>
+		inline T SetCurrentPushBack() {
+			return static_cast<T>(this->current = this->m_window.PushBack<u8>());
+		}
+
+
+		private:
 		SlideView<u8> m_subTokens = {};
 		SlideView<u8> m_window = {};
 		u64 row = 0;
 		u64 lastRowIndex = 0;
-		Token_E currentType = Token_E::Unknown;
+		Token_E currentType = Token_E::Invalid;
+		u8 current = '\0';
+		u8 next = '\0';
+		u8 quote = '\0';
+		u8 commentLevel;
+		bool incomplete = false;
 	};
 
-	enum class Delimiter_E : u8 {
-		OpenBrace = '{',
-		CloseBrace = '}',
-		OpenParenthesis = '(',
-		CloseParenthesis = ')',
-		OpenSquareBracket = '[',
-		CloseSquareBracket = ']',
-		TypeSeparator = ':',
-		ListSeparator = ',',
-	};
 
-	enum class Whitespace_E : u8 {
-		Tab = '\t',
-		FormFeed = '\x0C',
-		CarriageReturn = '\r',
-		Space = ' ',
-		Newline = '\n'
-	};
 
-	enum class QuotePrefix : u8 {
-		Raw = 'r',
-		Binary = 'b',
-		Unicode = 'u',
-		Formatted = 'f'
-	};
 
-	enum class Quote_E : u8 {
-		Single = '\'',
-		Double = '"'
-	};
 
-	enum class OperatorOne_E : u8 {
-		BitwiseOr = '|',
-		BitwiseAnd = '&',
-		BitwiseXor = '^',
-		Not = '!',
-		Add = '+',
-		Subtract = '-',
-		Multiply = '*',
-		Divide = '/',
-		Modulo = '%',
-		Equal = '=',
-		NotEqual = '!',
-		LessThan = '<',
-		GreaterThan = '>',
-		Access = '.',
-		Optional = '?',
-	};
-
-	enum class OperatorTwo_E : u16 {
-		Or = swapEndian('||'),
-		And = swapEndian('&&'),
-		ShiftLeft = swapEndian('<<'),
-		ShiftRight = swapEndian('>>'),
-		AddAssign = swapEndian('+='),
-		SubtractAssign = swapEndian('-='),
-		MultiplyAssign = swapEndian('*='),
-		DivideAssign = swapEndian('/='),
-		ModuloAssign = swapEndian('%='),
-		BitwiseAndAssign = swapEndian('&='),
-		BitwiseOrAssign = swapEndian('|='),
-		BitwiseXorAssign = swapEndian('^='),
-		Return = swapEndian('->'),
-		Equal = swapEndian('=='),
-		NotEqual = swapEndian('!='),
-		LessThanOrEqual = swapEndian('<='),
-		GreaterThanOrEqual = swapEndian('>='),
-		ScopeResolution = swapEndian('::'),
-	};
 
 	enum Comment_E : u16 {
 		SingleLine = swapEndian('//'),
@@ -114,23 +64,6 @@ namespace Match::Parser {
 		MultiLineEnd = swapEndian('*/'),
 	};
 
-	enum class Keyword_E : u8 {
-		Template,
-		Abstract,
-		Statement,
-		Group,
-		Namespace,
-		Rule,
-		For,
-		While,
-		Loop,
-		If,
-		Else,
-		ElseIf,
-		Switch,
-		Case,
-		Default,
-	};
 
 	// struct Template
 	// {

@@ -8,7 +8,7 @@ namespace Match::Parser {
 		Parser();
 		~Parser();
 	private:
-		Tokenizer Tokenizer;
+	Lexer Tokenizer;
 	};
 }
 
