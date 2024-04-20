@@ -16,8 +16,7 @@ namespace Match::Parser {
 
         while (this->m_subTokens.IsSubViewInBounds(m_window)) {
             Token token = this->NextToken();
-
-            LoggerInstance.Log("Token Of Type: {}", LogLevel::LOG_DEBUG, token.ToString() + " " + std::to_string(static_cast<u8>(token.GetType())));
+            LoggerInstance.Log("{}", LogLevel::LOG_DEBUG, std::format("Token Of Type {} Found! Token Value: {}", token.ToString(), token.GetSubTokensAsStr()));
             tokens.push_back(token);
         };
         return tokens;

@@ -113,18 +113,10 @@ namespace Match {
             return window.m_tail + n > this->m_tail ;
         }
 
-
-
-        template <typename U = T>
-        std::basic_string_view<U> ToString() const {
-            return std::basic_string_view<U>(this->m_head, this->m_tail - this->m_head);
-        }
-
-        template <typename U = T>
-
-        inline std::basic_string_view<U> operator()() {
-            return std::basic_string_view<U>(this->m_head, this->m_tail - this->m_head);
-        }
+        template <typename U = std::make_signed_t<T>>
+        inline operator std::basic_string_view<U>() const {
+			return std::basic_string_view<U>((const U*)this->m_head, (const U*)this->m_tail);
+		}
 
         inline T& operator*() { return *m_head; }
 
@@ -173,12 +165,14 @@ namespace Match {
             return this->m_tail == subView.GetTail();
         }
 
-        inline const T* GetHead() const {
-            return this->m_head;
+        template <typename U = T>
+        inline const U* GetHead() const {
+            return static_cast<U*>(this->m_head);
         }
 
+        template <typename U = T>
         inline const T* GetTail() const {
-            return this->m_tail;
+            return static_cast<U*>(this->m_tail);
         }
 
         // Begin and end of the view

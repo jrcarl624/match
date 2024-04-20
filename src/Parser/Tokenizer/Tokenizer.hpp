@@ -5,10 +5,9 @@
 #include "../../Types/SlideView.hpp"
 #include "../../Types/RangeGeneration.hpp"
 #include "Token.hpp"
+#include <bit>
 #include <vector>
 
-// ((val & 0xFF00) >> 8) | ((val & 0x00FF) << 8)
-#define swapEndian(shor) ((shor & 0xFF00) >> 8) | ((shor & 0x00FF) << 8)
 
 namespace Match::Parser {
 
@@ -49,23 +48,13 @@ namespace Match::Parser {
 		u8 current = '\0';
 		u8 next = '\0';
 		u8 quote = '\0';
-		u8 commentLevel;
+		u16 commentLevel = 0;
 		bool incomplete = false;
 	};
-
-
-
-
-
-
 	enum Comment_E : u16 {
-		SingleLine = swapEndian('//'),
-		MultiLineStart = swapEndian('/*'),
-		MultiLineEnd = swapEndian('*/'),
+		SingleLine = '//',
+		MultiLineStart = std::byteswap<u16>('/*'),
+		MultiLineEnd = std::byteswap<u16>('*/'),
 	};
 
-
-	// struct Template
-	// {
-	// };
 }
