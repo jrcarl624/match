@@ -3,6 +3,8 @@
 
 
 namespace Match::Parser {
+	// Please for the love of god don't change this value.
+	// Yes this means if ur rewriting this codebase you must keep this unless you change how we parse.
 	constexpr u8 MAGIC_NUMBER = 37;
 
 
