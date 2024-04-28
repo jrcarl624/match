@@ -1,7 +1,6 @@
 #pragma once
 #include "Parser/Parser.hpp"
 
-
 namespace Match {
     class Application {
     public:

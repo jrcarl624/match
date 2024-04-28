@@ -34,7 +34,8 @@ namespace Match::Parser {
 
 		// Literals
 		BoolLiteral = 18,
-		NumericLiteral = 19,
+		IntegerLiteral = 19,
+		FloatLiteral = 20,
 		CharLiteral = '\'', //39
 		StringLiteral = '"', //34
 
@@ -218,7 +219,7 @@ namespace Match::Parser {
 
 				case Token_E::BoolLiteral:
 					return "BoolLiteral";
-                case Token_E::NumericLiteral:
+				case Token_E::IntegerLiteral:
 					return "NumericLiteral";
                 case Token_E::CharLiteral:
 					return "CharLiteral";
