@@ -32,7 +32,7 @@
 	case Token_E::EqualTo:\
 	case Token_E::LessThan:\
 	case Token_E::GreaterThan:\
-	case Token_E::Access:\
+	case Token_E::DotAccess:\
 	case Token_E::Optional:\
 	case Token_E::Colon\
 

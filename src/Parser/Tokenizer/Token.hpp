@@ -5,12 +5,12 @@
 namespace Match::Parser {
 	// Please for the love of god don't change this value.
 	// Yes this means if ur rewriting this codebase you must keep this unless you change how we parse.
-	 constexpr u8 MAGIC_NUMBER = 37;
+	constexpr u8 MAGIC_NUMBER = 37;
 
 
 	enum class Token_E :u8 {
 
-				// Primitives
+		// Primitives
 		Char = 1,
 		U32 = 2,
 		I32 = 4,
@@ -57,7 +57,7 @@ namespace Match::Parser {
 		Multiply = '*', //42
 		Add = '+', //43
 		Subtract = '-', //45
-		Access = '.', //46
+		DotAccess = '.', //46
 		Divide = '/', //47
 		Colon = ':', //58
 		LessThan = '<', //60
@@ -192,7 +192,7 @@ namespace Match::Parser {
 		Upper_X = 'X', //88
 		Upper_Y = 'Y', //89
 		Upper_Z = 'Z', //90
-		
+
 
 	};
 
@@ -221,127 +221,127 @@ namespace Match::Parser {
 					return "BoolLiteral";
 				case Token_E::IntegerLiteral:
 					return "NumericLiteral";
-                case Token_E::CharLiteral:
+				case Token_E::CharLiteral:
 					return "CharLiteral";
-                case Token_E::StringLiteral:
+				case Token_E::StringLiteral:
 					return "StringLiteral";
-                case Token_E::Pattern:
+				case Token_E::Pattern:
 					return "Pattern";
-                case Token_E::Template:
+				case Token_E::Template:
 					return "Template";
-                case Token_E::Abstract:
+				case Token_E::Abstract:
 					return "Abstract";
-                case Token_E::Statement:
+				case Token_E::Statement:
 					return "Statement";
-                case Token_E::Group:
+				case Token_E::Group:
 					return "Group";
-                case Token_E::Namespace:
+				case Token_E::Namespace:
 					return "Namespace";
-                case Token_E::Rule:
+				case Token_E::Rule:
 					return "Rule";
-                case Token_E::For:
+				case Token_E::For:
 					return "For";
-                case Token_E::While:
+				case Token_E::While:
 					return "While";
-                case Token_E::Loop:
+				case Token_E::Loop:
 					return "Loop";
-                case Token_E::If:
+				case Token_E::If:
 					return "If";
-                case Token_E::Else:
+				case Token_E::Else:
 					return "Else";
-                case Token_E::Match:
+				case Token_E::Match:
 					return "Match";
-                case Token_E::ScopeResolution:
+				case Token_E::ScopeResolution:
 					return "ScopeResolution";
-                case Token_E::BitwiseOr:
+				case Token_E::BitwiseOr:
 					return "BitwiseOr";
-                case Token_E::Or:
+				case Token_E::Or:
 					return "Or";
-                case Token_E::BitwiseAnd:
+				case Token_E::BitwiseAnd:
 					return "BitwiseAnd";
-                case Token_E::And:
+				case Token_E::And:
 					return "And";
-                case Token_E::BitwiseXor:
+				case Token_E::BitwiseXor:
 					return "BitwiseXor";
-                case Token_E::Not:
+				case Token_E::Not:
 					return "Not";
-                case Token_E::ShiftLeft:
+				case Token_E::ShiftLeft:
 					return "ShiftLeft";
-                case Token_E::ShiftRight:
+				case Token_E::ShiftRight:
 					return "ShiftRight";
-                case Token_E::Add:
+				case Token_E::Add:
 					return "Add";
-                case Token_E::Subtract:
+				case Token_E::Subtract:
 					return "Subtract";
-                case Token_E::Multiply:
+				case Token_E::Multiply:
 					return "Multiply";
-                case Token_E::Divide:
+				case Token_E::Divide:
 					return "Divide";
-                case Token_E::Modulo:
+				case Token_E::Modulo:
 					return "Modulo";
-                case Token_E::EqualTo:
+				case Token_E::EqualTo:
 					return "EqualTo";
-                case Token_E::NotEqual:
+				case Token_E::NotEqual:
 					return "NotEqual";
-                case Token_E::LessThan:
+				case Token_E::LessThan:
 					return "LessThan";
-                case Token_E::GreaterThan:
+				case Token_E::GreaterThan:
 					return "GreaterThan";
-                case Token_E::LessThanOrEqual:
+				case Token_E::LessThanOrEqual:
 					return "LessThanOrEqual";
-                case Token_E::GreaterThanOrEqual:
+				case Token_E::GreaterThanOrEqual:
 					return "GreaterThanOrEqual";
-                case Token_E::Assign:
+				case Token_E::Assign:
 					return "Assign";
-                case Token_E::Access:
+				case Token_E::DotAccess:
 					return "Access";
-                case Token_E::Colon:
+				case Token_E::Colon:
 					return "TypeDefinition";
 				case Token_E::Optional:
 					return "Optional";
-                case Token_E::Return:
+				case Token_E::Return:
 					return "Return";
-                case Token_E::AddAssign:
+				case Token_E::AddAssign:
 					return "AddAssign";
-                case Token_E::SubtractAssign:
+				case Token_E::SubtractAssign:
 					return "SubtractAssign";
-                case Token_E::MultiplyAssign:
+				case Token_E::MultiplyAssign:
 					return "MultiplyAssign";
-                case Token_E::DivideAssign:
+				case Token_E::DivideAssign:
 					return "DivideAssign";
-                case Token_E::ModuloAssign:
+				case Token_E::ModuloAssign:
 					return "ModuleloAssign";
-                case Token_E::BitwiseXorAssign:
+				case Token_E::BitwiseXorAssign:
 					return "BitwiseXorAssign";
-                case Token_E::BitwiseAndAssign:
+				case Token_E::BitwiseAndAssign:
 					return "BitwiseAndAssign";
-                case Token_E::BitwiseOrAssign:
+				case Token_E::BitwiseOrAssign:
 					return "BitwiseOrAssign";
-                   case Token_E::OpenCurlyBracket:
+				case Token_E::OpenCurlyBracket:
 					return "OpenCurlyBracket";
-                case Token_E::CloseCurlyBracket:
+				case Token_E::CloseCurlyBracket:
 					return "CloseCurlyBracket";
-                case Token_E::OpenSquareBracket:
+				case Token_E::OpenSquareBracket:
 					return "OpenSquareBracket";
-                case Token_E::CloseSquareBracket:
+				case Token_E::CloseSquareBracket:
 					return "CloseSquareBracket";
-                case Token_E::OpenRoundBracket:
+				case Token_E::OpenRoundBracket:
 					return "OpenRoundBracket";
-                case Token_E::CloseRoundBracket:
+				case Token_E::CloseRoundBracket:
 					return "CloseRoundBracket";
-                case Token_E::Comma:
+				case Token_E::Comma:
 					return "Comma";
-                case Token_E::SemiColon:
+				case Token_E::SemiColon:
 					return "SemiColon";
-                case Token_E::Underscore:
+				case Token_E::Underscore:
 					return "Underscore";
-                case Token_E::Comment:
+				case Token_E::Comment:
 					return "Comment";
-                case Token_E::Identifier:
+				case Token_E::Identifier:
 					return "Identifier";
-                case Token_E::Eof:
+				case Token_E::Eof:
 					return "Eof";
-                case Token_E::Invalid:
+				case Token_E::Invalid:
 					return "Invalid";
 
 			}

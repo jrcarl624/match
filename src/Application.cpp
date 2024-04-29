@@ -366,7 +366,8 @@ namespace Match::Parser {
 		this->SetTokenType(Token_E::Invalid);
 		return token;
 	}
-})";
+}
+)";
 
         Parser::Lexer tokenizer;
         SlideView<u8> source = SlideView<u8>(testCode);

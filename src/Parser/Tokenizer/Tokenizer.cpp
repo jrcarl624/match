@@ -21,8 +21,7 @@ namespace Match::Parser {
             auto start = std::chrono::high_resolution_clock::now();
             Token token = this->NextToken();
             auto stop = std::chrono::high_resolution_clock::now();
-            auto duration =
-                std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
             LoggerInstance.Log("{}", LogLevel::LOG_DEBUG, std::format("Token Of Type {} Found! Token Value: '{}', took: {}", token.ToString(), token.GetSubTokensAsStr(), duration));
             tokens.push_back(token);
         };
@@ -116,7 +115,7 @@ namespace Match::Parser {
                 this->SetTokenType(Token_E::IntegerLiteral);
             number: // Parse the rest of the number
                 switch (this->SetCurrentPushBack<Token_E>()) {
-                    case '.': // Check for decimal point and set type to float if not already a float
+                    case Token_E::DotAccess: // Check for decimal point and set type to float if not already a float
                         if (this->currentType == Token_E::FloatLiteral) {
                             this->SetTokenType(Token_E::Invalid); // If there is another dot then it is invalid
                             goto increment_and_return;
@@ -132,23 +131,21 @@ namespace Match::Parser {
 
             case uppercase_tokens: // Identifiers -----------------------
             case lowercase_tokens:
-            case Token_E::Underscore: {
-                    this->SetTokenType(Token_E::Identifier);
-                identifier: // Parse the rest of the identifier
-                    switch (this->m_window.Back<Token_E>(1)) {
-                        case uppercase_tokens:
-                        case lowercase_tokens:
-                        case numeric_tokens:
-                        case Token_E::Underscore:
-                            {
-                                if (this->m_subTokens.IsSubViewInBounds(m_window)) {
-                                    this->m_window.IncTail();
-                                }
-                                goto identifier;
-                            }
-                    }
-                    goto increment_and_return;
+            case Token_E::Underscore:
+                this->SetTokenType(Token_E::Identifier);
+            identifier: // Parse the rest of the identifier
+                switch (this->m_window.Back<Token_E>(1)) {
+                    case uppercase_tokens:
+                    case lowercase_tokens:
+                    case numeric_tokens:
+                    case Token_E::Underscore:
+                        if (this->m_subTokens.IsSubViewInBounds(m_window))
+                            this->m_window.IncTail();
+                        goto identifier;
+                    default:
+                        goto increment_and_return;
                 }
+
             default: // Invalid Tokens -----------------------
                 this->SetTokenType(Token_E::Invalid);
                 goto increment_and_return;
