@@ -12,7 +12,7 @@
 #endif // !LOG_FLUSH_CONSTANT
 
 
-namespace Match {
+namespace match {
 	enum class LogLevel : unsigned char {
 		LOG_INFO,
 		LOG_DEBUG,

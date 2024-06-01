@@ -4,7 +4,7 @@
 #include <concepts>
 #include <string>
 
-namespace Match {
+namespace match {
     template <typename T>
     class SlideView {
     public:

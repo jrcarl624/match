@@ -8,120 +8,151 @@
 #include <bit>
 #include <vector>
 #define numeric_tokens \
-	Token_E::Zero:\
-	case Token_E::One:\
-	case Token_E::Two:\
-	case Token_E::Three:\
-	case Token_E::Four:\
-	case Token_E::Five:\
-	case Token_E::Six:\
-	case Token_E::Seven:\
-	case Token_E::Eight:\
-	case Token_E::Nine\
+	Token_e::Zero:\
+	case Token_e::One:\
+	case Token_e::Two:\
+	case Token_e::Three:\
+	case Token_e::Four:\
+	case Token_e::Five:\
+	case Token_e::Six:\
+	case Token_e::Seven:\
+	case Token_e::Eight:\
+	case Token_e::Nine\
 
 #define operator_1_no_divide_tokens \
-	Token_E::Not:\
-	case Token_E::BitwiseOr:\
-	case Token_E::BitwiseAnd:\
-	case Token_E::BitwiseXor:\
-	case Token_E::Add:\
-	case Token_E::Assign:\
-	case Token_E::Subtract:\
-	case Token_E::Multiply:\
-	case Token_E::Modulo:\
-	case Token_E::EqualTo:\
-	case Token_E::LessThan:\
-	case Token_E::GreaterThan:\
-	case Token_E::DotAccess:\
-	case Token_E::Optional:\
-	case Token_E::Colon\
+	Token_e::Not:\
+	case Token_e::Colon:\
+	case Token_e::BitwiseOr:\
+	case Token_e::BitwiseAnd:\
+	case Token_e::BitwiseXor:\
+	case Token_e::Add:\
+	case Token_e::Assign:\
+	case Token_e::Subtract:\
+	case Token_e::Multiply:\
+	case Token_e::Modulo:\
+	case Token_e::EqualTo:\
+	case Token_e::LessThan:\
+	case Token_e::GreaterThan:\
+	case Token_e::DotAccess:\
+	case Token_e::Optional\
+/*And = '&' + '&' + MAGIC_NUMBER,//76
+		NotEqual = '!' + '=' + MAGIC_NUMBER,//94 
+		ModuloAssign = '%' + '=' + MAGIC_NUMBER,//98 
+		BitwiseAndAssign = '&' + '=' + MAGIC_NUMBER,//99 
+		MultiplyAssign = '*' + '=' + MAGIC_NUMBER,//103 
+		AddAssign = '+' + '=' + MAGIC_NUMBER,//104 
+		SubtractAssign = '-' + '=' + MAGIC_NUMBER,//106 
+		Return = '-' + '>' + MAGIC_NUMBER,//107 
+		DivideAssign = '/' + '=' + MAGIC_NUMBER,//108 
+		ScopeResolution = ':' + ':' + MAGIC_NUMBER,//116 
+		ShiftLeft = '<' + '<' + MAGIC_NUMBER,//120 
+		LessThanOrEqual = '<' + '=' + MAGIC_NUMBER,//121 
+		EqualTo = '=' + '=' + MAGIC_NUMBER,//122 
+		GreaterThanOrEqual = '>' + '=' + MAGIC_NUMBER,//123 
+		ShiftRight = '>' + '>' + MAGIC_NUMBER,//124 
+		BitwiseXorAssign = '^' + '=' + MAGIC_NUMBER,//155 
+		BitwiseOrAssign = '|' + '=' + MAGIC_NUMBER,//185 
+		Or = '|' + '|' + MAGIC_NUMBER,//248 */
+#define operator_2_tokens \
+		Token_e::And:\
+		case Token_e::NotEqual:\
+		case Token_e::ModuloAssign:\
+		case Token_e::BitwiseAndAssign:\
+		case Token_e::MultiplyAssign:\
+		case Token_e::AddAssign:\
+		case Token_e::SubtractAssign:\
+		case Token_e::Return:\
+		case Token_e::DivideAssign:\
+		case Token_e::ScopeResolution:\
+		case Token_e::ShiftLeft:\
+		case Token_e::LessThanOrEqual:\
+		case Token_e::EqualTo:\
+		case Token_e::GreaterThanOrEqual:\
+		case Token_e::ShiftRight:\
+		case Token_e::BitwiseXorAssign:\
+		case Token_e::BitwiseOrAssign:\
+		case Token_e::Or\
+		
 
-#define operator_2nd_half_tokens \
-	Token_E::BitwiseAnd: \
-	case Token_E::BitwiseOr:\
-	case Token_E::Assign: \
-	case Token_E::GreaterThan: \
-	case Token_E::LessThan: \
-	case Token_E::Colon \
 
 
 #define delimiter_tokens \
-	Token_E::OpenCurlyBracket:\
-	case Token_E::CloseCurlyBracket:\
-	case Token_E::OpenRoundBracket:\
-	case Token_E::CloseRoundBracket:\
-	case Token_E::OpenSquareBracket:\
-	case Token_E::CloseSquareBracket:\
-	case Token_E::Comma:\
-	case Token_E::SemiColon\
+	Token_e::OpenCurlyBracket:\
+	case Token_e::CloseCurlyBracket:\
+	case Token_e::OpenRoundBracket:\
+	case Token_e::CloseRoundBracket:\
+	case Token_e::OpenSquareBracket:\
+	case Token_e::CloseSquareBracket:\
+	case Token_e::Comma:\
+	case Token_e::SemiColon\
 
 #define quote_tokens \
-	Token_E::StringLiteral:\
-	case Token_E::CharLiteral\
+	Token_e::StringLiteral:\
+	case Token_e::CharLiteral\
 
 #define uppercase_tokens \
-	Token_E::Upper_A:\
-	case Token_E::Upper_B:\
-	case Token_E::Upper_C:\
-	case Token_E::Upper_D:\
-	case Token_E::Upper_E:\
-	case Token_E::Upper_F:\
-	case Token_E::Upper_G:\
-	case Token_E::Upper_H:\
-	case Token_E::Upper_I:\
-	case Token_E::Upper_J:\
-	case Token_E::Upper_K:\
-	case Token_E::Upper_L:\
-	case Token_E::Upper_M:\
-	case Token_E::Upper_N:\
-	case Token_E::Upper_O:\
-	case Token_E::Upper_P:\
-	case Token_E::Upper_Q:\
-	case Token_E::Upper_R:\
-	case Token_E::Upper_S:\
-	case Token_E::Upper_T:\
-	case Token_E::Upper_U:\
-	case Token_E::Upper_V:\
-	case Token_E::Upper_W:\
-	case Token_E::Upper_X:\
-	case Token_E::Upper_Y:\
-	case Token_E::Upper_Z\
+	Token_e::Upper_A:\
+	case Token_e::Upper_B:\
+	case Token_e::Upper_C:\
+	case Token_e::Upper_D:\
+	case Token_e::Upper_E:\
+	case Token_e::Upper_F:\
+	case Token_e::Upper_G:\
+	case Token_e::Upper_H:\
+	case Token_e::Upper_I:\
+	case Token_e::Upper_J:\
+	case Token_e::Upper_K:\
+	case Token_e::Upper_L:\
+	case Token_e::Upper_M:\
+	case Token_e::Upper_N:\
+	case Token_e::Upper_O:\
+	case Token_e::Upper_P:\
+	case Token_e::Upper_Q:\
+	case Token_e::Upper_R:\
+	case Token_e::Upper_S:\
+	case Token_e::Upper_T:\
+	case Token_e::Upper_U:\
+	case Token_e::Upper_V:\
+	case Token_e::Upper_W:\
+	case Token_e::Upper_X:\
+	case Token_e::Upper_Y:\
+	case Token_e::Upper_Z\
 
 #define lowercase_tokens \
-	Token_E::Lower_A:\
-	case Token_E::Lower_B:\
-	case Token_E::Lower_C:\
-	case Token_E::Lower_D:\
-	case Token_E::Lower_E:\
-	case Token_E::Lower_F:\
-	case Token_E::Lower_G:\
-	case Token_E::Lower_H:\
-	case Token_E::Lower_I:\
-	case Token_E::Lower_J:\
-	case Token_E::Lower_K:\
-	case Token_E::Lower_L:\
-	case Token_E::Lower_M:\
-	case Token_E::Lower_N:\
-	case Token_E::Lower_O:\
-	case Token_E::Lower_P:\
-	case Token_E::Lower_Q:\
-	case Token_E::Lower_R:\
-	case Token_E::Lower_S:\
-	case Token_E::Lower_T:\
-	case Token_E::Lower_U:\
-	case Token_E::Lower_V:\
-	case Token_E::Lower_W:\
-	case Token_E::Lower_X:\
-	case Token_E::Lower_Y:\
-	case Token_E::Lower_Z\
+	Token_e::Lower_A:\
+	case Token_e::Lower_B:\
+	case Token_e::Lower_C:\
+	case Token_e::Lower_D:\
+	case Token_e::Lower_E:\
+	case Token_e::Lower_F:\
+	case Token_e::Lower_G:\
+	case Token_e::Lower_H:\
+	case Token_e::Lower_I:\
+	case Token_e::Lower_J:\
+	case Token_e::Lower_K:\
+	case Token_e::Lower_L:\
+	case Token_e::Lower_M:\
+	case Token_e::Lower_N:\
+	case Token_e::Lower_O:\
+	case Token_e::Lower_P:\
+	case Token_e::Lower_Q:\
+	case Token_e::Lower_R:\
+	case Token_e::Lower_S:\
+	case Token_e::Lower_T:\
+	case Token_e::Lower_U:\
+	case Token_e::Lower_V:\
+	case Token_e::Lower_W:\
+	case Token_e::Lower_X:\
+	case Token_e::Lower_Y:\
+	case Token_e::Lower_Z\
 
 #define horizontal_whitespace_tokens \
-	Token_E::CarriageReturn:\
-	case Token_E::FormFeed:\
-	case Token_E::Space:\
-	case Token_E::Tab\
+	Token_e::CarriageReturn:\
+	case Token_e::FormFeed:\
+	case Token_e::Space:\
+	case Token_e::Tab\
 
-namespace Match::Parser {
+namespace match::parser {
 
 	class Lexer {
 		public:
@@ -138,10 +169,10 @@ namespace Match::Parser {
 		}
 
 		inline void SetTokenType(u8 byte) {
-			this->currentType = static_cast<Token_E>(byte);
+			this->currentType = static_cast<Token_e>(byte);
 		}
 
-		inline void SetTokenType(Token_E type) {
+		inline void SetTokenType(Token_e type) {
 			this->currentType = type;
 		}
 
@@ -156,7 +187,7 @@ namespace Match::Parser {
 		SlideView<u8> m_window = {};
 		u64 row = 0;
 		u64 lastRowIndex = 0;
-		Token_E currentType = Token_E::Invalid;
+		Token_e currentType = Token_e::Invalid;
 		u8 current = '\0';
 		u8 next = '\0';
 		u8 quote = '\0';

@@ -1,6 +1,6 @@
 #include "Parser.hpp"
 
-namespace Match::Parser {
+namespace match::parser {
 	Parser::Parser() {
 
 	}

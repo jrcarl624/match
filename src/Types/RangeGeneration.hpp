@@ -3,7 +3,7 @@
 #include <array>
 #include "../types.hpp"
 
-namespace Match {
+namespace match {
 
     template <typename T, u64 Start, u64 End>
     constexpr std::array<T, End - Start> GenerateRange() {

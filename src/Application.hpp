@@ -1,7 +1,9 @@
 #pragma once
 #include "Parser/Parser.hpp"
+#include "Parser/Tokenizer/Token.hpp"
 
-namespace Match {
+
+namespace match {
     class Application {
     public:
         Application();
@@ -9,7 +11,7 @@ namespace Match {
     private:
         void run();
     private:
-        Parser::Parser parser;
+        parser::Parser parser;
 
     };
 

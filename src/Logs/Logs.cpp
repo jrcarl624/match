@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iomanip>
 
-namespace Match {
+namespace match {
 	Logger LoggerInstance;
 	const std::string LogLevelToTerminalColor(const LogLevel level) {
 		/*

@@ -2,7 +2,7 @@
 #include "Tokenizer/Tokenizer.hpp"
 #include <string>
 
-namespace Match::Parser {
+namespace match::parser {
 	class Parser {
 	public:
 		Parser();

@@ -2,13 +2,13 @@
 #include "../../Types/SlideView.hpp"
 
 #pragma warning(disable: 4369)
-namespace Match::Parser {
+namespace match::parser {
 	// Please for the love of god don't change this value.
 	// Yes this means if ur rewriting this codebase you must keep this unless you change how we parse.
 	constexpr u8 MAGIC_NUMBER = 37;
 
 
-	enum class Token_E :u8 {
+	enum class Token_e :u8 {
 
 		// Primitives
 		Char = 1,
@@ -80,7 +80,7 @@ namespace Match::Parser {
 		ShiftLeft = '<' + '<' + MAGIC_NUMBER,//120 
 		LessThanOrEqual = '<' + '=' + MAGIC_NUMBER,//121 
 		EqualTo = '=' + '=' + MAGIC_NUMBER,//122 
-		GreaterThanOrEqual = '>' + '=' + MAGIC_NUMBER,//123 
+		GreaterThanOrEqual = '>' + '=' + MAGIC_NUMBER,//123
 		ShiftRight = '>' + '>' + MAGIC_NUMBER,//124 
 		BitwiseXorAssign = '^' + '=' + MAGIC_NUMBER,//155 
 		BitwiseOrAssign = '|' + '=' + MAGIC_NUMBER,//185 
@@ -104,6 +104,9 @@ namespace Match::Parser {
 
 		OpenSquareBracket = '[', //91 
 		CloseSquareBracket = ']', //93
+
+		OpenAngleBracket = '<', 
+		CloseAngleBracket = '>',
 
 		OpenCurlyBracket = '{', //123
 		CloseCurlyBracket = '}', //125
@@ -198,7 +201,7 @@ namespace Match::Parser {
 
 	class Token {
 		public:
-		Token(SlideView<u8> subTokens, u64 column, u64 row, Token_E type) : m_subTokens(subTokens), m_column(column), m_row(row), m_type(type) {}
+		Token(SlideView<u8> subTokens, u64 column, u64 row, Token_e type) : m_subTokens(subTokens), m_column(column), m_row(row), m_type(type) {}
 		Token() {}
 		~Token() {}
 
@@ -209,7 +212,7 @@ namespace Match::Parser {
 		u64 GetColumn() const { return m_column; }
 		u64 GetRow() const { return m_row; }
 		u64 Length() const { return m_subTokens.Size(); }
-		Token_E GetType() const { return m_type; }
+		Token_e GetType() const { return m_type; }
 		void SetSubTokens(SlideView<u8> subTokens) { m_subTokens = subTokens; }
 		void SetColumn(u64 column) { m_column = column; }
 		void SetRow(u64 row) { m_row = row; }
@@ -217,131 +220,131 @@ namespace Match::Parser {
 		inline std::string ToString() {
 			switch (m_type) {
 
-				case Token_E::BoolLiteral:
+				case Token_e::BoolLiteral:
 					return "BoolLiteral";
-				case Token_E::IntegerLiteral:
+				case Token_e::IntegerLiteral:
 					return "NumericLiteral";
-				case Token_E::CharLiteral:
+				case Token_e::CharLiteral:
 					return "CharLiteral";
-				case Token_E::StringLiteral:
+				case Token_e::StringLiteral:
 					return "StringLiteral";
-				case Token_E::Pattern:
+				case Token_e::Pattern:
 					return "Pattern";
-				case Token_E::Template:
+				case Token_e::Template:
 					return "Template";
-				case Token_E::Abstract:
+				case Token_e::Abstract:
 					return "Abstract";
-				case Token_E::Statement:
+				case Token_e::Statement:
 					return "Statement";
-				case Token_E::Group:
+				case Token_e::Group:
 					return "Group";
-				case Token_E::Namespace:
+				case Token_e::Namespace:
 					return "Namespace";
-				case Token_E::Rule:
+				case Token_e::Rule:
 					return "Rule";
-				case Token_E::For:
+				case Token_e::For:
 					return "For";
-				case Token_E::While:
+				case Token_e::While:
 					return "While";
-				case Token_E::Loop:
+				case Token_e::Loop:
 					return "Loop";
-				case Token_E::If:
+				case Token_e::If:
 					return "If";
-				case Token_E::Else:
+				case Token_e::Else:
 					return "Else";
-				case Token_E::Match:
+				case Token_e::Match:
 					return "Match";
-				case Token_E::ScopeResolution:
+				case Token_e::ScopeResolution:
 					return "ScopeResolution";
-				case Token_E::BitwiseOr:
+				case Token_e::BitwiseOr:
 					return "BitwiseOr";
-				case Token_E::Or:
+				case Token_e::Or:
 					return "Or";
-				case Token_E::BitwiseAnd:
+				case Token_e::BitwiseAnd:
 					return "BitwiseAnd";
-				case Token_E::And:
+				case Token_e::And:
 					return "And";
-				case Token_E::BitwiseXor:
+				case Token_e::BitwiseXor:
 					return "BitwiseXor";
-				case Token_E::Not:
+				case Token_e::Not:
 					return "Not";
-				case Token_E::ShiftLeft:
+				case Token_e::ShiftLeft:
 					return "ShiftLeft";
-				case Token_E::ShiftRight:
+				case Token_e::ShiftRight:
 					return "ShiftRight";
-				case Token_E::Add:
+				case Token_e::Add:
 					return "Add";
-				case Token_E::Subtract:
+				case Token_e::Subtract:
 					return "Subtract";
-				case Token_E::Multiply:
+				case Token_e::Multiply:
 					return "Multiply";
-				case Token_E::Divide:
+				case Token_e::Divide:
 					return "Divide";
-				case Token_E::Modulo:
+				case Token_e::Modulo:
 					return "Modulo";
-				case Token_E::EqualTo:
+				case Token_e::EqualTo:
 					return "EqualTo";
-				case Token_E::NotEqual:
+				case Token_e::NotEqual:
 					return "NotEqual";
-				case Token_E::LessThan:
+				case Token_e::LessThan:
 					return "LessThan";
-				case Token_E::GreaterThan:
+				case Token_e::GreaterThan:
 					return "GreaterThan";
-				case Token_E::LessThanOrEqual:
+				case Token_e::LessThanOrEqual:
 					return "LessThanOrEqual";
-				case Token_E::GreaterThanOrEqual:
+				case Token_e::GreaterThanOrEqual:
 					return "GreaterThanOrEqual";
-				case Token_E::Assign:
+				case Token_e::Assign:
 					return "Assign";
-				case Token_E::DotAccess:
+				case Token_e::DotAccess:
 					return "Access";
-				case Token_E::Colon:
+				case Token_e::Colon:
 					return "TypeDefinition";
-				case Token_E::Optional:
+				case Token_e::Optional:
 					return "Optional";
-				case Token_E::Return:
+				case Token_e::Return:
 					return "Return";
-				case Token_E::AddAssign:
+				case Token_e::AddAssign:
 					return "AddAssign";
-				case Token_E::SubtractAssign:
+				case Token_e::SubtractAssign:
 					return "SubtractAssign";
-				case Token_E::MultiplyAssign:
+				case Token_e::MultiplyAssign:
 					return "MultiplyAssign";
-				case Token_E::DivideAssign:
+				case Token_e::DivideAssign:
 					return "DivideAssign";
-				case Token_E::ModuloAssign:
+				case Token_e::ModuloAssign:
 					return "ModuleloAssign";
-				case Token_E::BitwiseXorAssign:
+				case Token_e::BitwiseXorAssign:
 					return "BitwiseXorAssign";
-				case Token_E::BitwiseAndAssign:
+				case Token_e::BitwiseAndAssign:
 					return "BitwiseAndAssign";
-				case Token_E::BitwiseOrAssign:
+				case Token_e::BitwiseOrAssign:
 					return "BitwiseOrAssign";
-				case Token_E::OpenCurlyBracket:
+				case Token_e::OpenCurlyBracket:
 					return "OpenCurlyBracket";
-				case Token_E::CloseCurlyBracket:
+				case Token_e::CloseCurlyBracket:
 					return "CloseCurlyBracket";
-				case Token_E::OpenSquareBracket:
+				case Token_e::OpenSquareBracket:
 					return "OpenSquareBracket";
-				case Token_E::CloseSquareBracket:
+				case Token_e::CloseSquareBracket:
 					return "CloseSquareBracket";
-				case Token_E::OpenRoundBracket:
+				case Token_e::OpenRoundBracket:
 					return "OpenRoundBracket";
-				case Token_E::CloseRoundBracket:
+				case Token_e::CloseRoundBracket:
 					return "CloseRoundBracket";
-				case Token_E::Comma:
+				case Token_e::Comma:
 					return "Comma";
-				case Token_E::SemiColon:
+				case Token_e::SemiColon:
 					return "SemiColon";
-				case Token_E::Underscore:
+				case Token_e::Underscore:
 					return "Underscore";
-				case Token_E::Comment:
+				case Token_e::Comment:
 					return "Comment";
-				case Token_E::Identifier:
+				case Token_e::Identifier:
 					return "Identifier";
-				case Token_E::Eof:
+				case Token_e::Eof:
 					return "Eof";
-				case Token_E::Invalid:
+				case Token_e::Invalid:
 					return "Invalid";
 
 			}
@@ -351,7 +354,7 @@ namespace Match::Parser {
 		SlideView<u8> m_subTokens = {};
 		u64 m_column = 0;
 		u64 m_row = 0;
-		Token_E m_type = Token_E::Invalid;
+		Token_e m_type = Token_e::Invalid;
 	};
 
 }

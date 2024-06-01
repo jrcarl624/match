@@ -2,7 +2,7 @@
 #include <cstdint>
 
 
-namespace Match  {
+namespace match  {
     using u8 = unsigned char;
     using u16 = unsigned short;
     using u32 = unsigned int;
